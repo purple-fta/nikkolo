@@ -1,1 +1,1 @@
-from province.province import Province, ProvinceType
+from .province import *
