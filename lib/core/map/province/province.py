@@ -8,6 +8,7 @@ class ProvinceType(Enum):
 
 
 class Province:
-    def __init__(self, province_type: ProvinceType, is_supply_center: bool):
+    def __init__(self, name: str, province_type: ProvinceType, is_supply_center: bool):
+        self.str = str
         self.province_type = province_type
         self.is_supply_center = is_supply_center

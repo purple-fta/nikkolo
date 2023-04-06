@@ -8,4 +8,7 @@ class Map:
         self.provinces_graph[new_province] = set(neighboring_provinces)
 
         for pr in neighboring_provinces:
-            self.provinces_graph[pr].add(new_province)
+            if pr in self.provinces_graph:
+                self.provinces_graph[pr].add(new_province)
+            else:
+                self.provinces_graph[pr] = set([new_province])
