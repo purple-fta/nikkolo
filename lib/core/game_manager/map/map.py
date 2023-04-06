@@ -1,8 +1,10 @@
 from .province import Province
+from .unit import Unit
 
 class Map:
     def __init__(self):
         self.provinces_graph = dict()
+        self.units = set()
     
     def add_province(self, new_province: Province, neighboring_provinces: [Province]):
         self.provinces_graph[new_province] = set(neighboring_provinces)
@@ -12,3 +14,9 @@ class Map:
                 self.provinces_graph[pr].add(new_province)
             else:
                 self.provinces_graph[pr] = set([new_province])
+
+    def add_connection(self, first_province: Province, second_province: Province):
+        self.provinces_graph[first_province].add(second_province)
+
+    def add_unit(self, location: Province):
+        self.units.add(Unit(location))

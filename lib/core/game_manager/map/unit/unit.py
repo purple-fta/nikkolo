@@ -1,6 +1,7 @@
 class Move:
     def __init__(self, unit, target):
-        pass
+        self.unit = unit
+        self.target = target
 
 class Unit:
     def __init__(self, location):
