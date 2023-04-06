@@ -12,3 +12,6 @@ class Map:
                 self.provinces_graph[pr].add(new_province)
             else:
                 self.provinces_graph[pr] = set([new_province])
+
+    def add_connection(self, first_province: Province, second_province: Province):
+        self.provinces_graph[first_province].add(second_province)
