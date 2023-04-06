@@ -21,6 +21,7 @@ font = pygame.font.SysFont("jetbrainsmononfm", 25)
 font_fps = pygame.font.SysFont("jetbrainsmononfm", 14)
 
 game_map = GuiMap()
+game_manager = GameManager(game_map)
 
 map_surface = pygame.image.load("game_maps/image.png")
 
@@ -119,7 +120,6 @@ while create_units:
                             pygame.draw.circle(screen, COLORS["RED"], pr.coordinates, 15)
 
 
-
     pygame.draw.rect(screen, COLORS["BG"], (screen.get_width()-55, 0, 55, 35))
     clock.tick(75)
     screen.blit(font_fps.render(str(round(clock.get_fps(), 2)), True, COLORS["FG"]), (screen.get_width()-50, 5))
@@ -135,6 +135,8 @@ screen.blit(font.render("ДАЛЕЕ", True, COLORS["BG"]), (map_surface.get_widt
 screen.blit(map_surface, (0, 41))
 selected_unit = None
 create_moves = True
+for pr in provinces:
+    pygame.draw.circle(screen, COLORS["COMM"], pr.coordinates, 5)
 for unit in game_map.units:
     pygame.draw.circle(screen, COLORS["RED"], unit.location.coordinates, 15)
 while create_moves:
@@ -144,14 +146,25 @@ while create_moves:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if button_next_rect.collidepoint(event.pos):
-                    create_moves = False
+                    game_manager.make_movements()
+                    screen.blit(map_surface, (0, 41))
+                    for pr in provinces:
+                        pygame.draw.circle(screen, COLORS["COMM"], pr.coordinates, 5)
+                    for unit in game_map.units:
+                        pygame.draw.circle(screen, COLORS["RED"], unit.location.coordinates, 15)
                 else:
                     if selected_unit is None:
                         for unit in game_map.units:
                             if math.sqrt( (unit.location.coordinates[0]-event.pos[0])**2 + (unit.location.coordinates[1]-event.pos[1])**2 ) < 15:
                                 selected_unit = unit
+                                pygame.draw.circle(screen, COLORS["PINK"], selected_unit.location.coordinates, 15)
                     else:
-                        pass
+                        for pr in provinces:
+                            if math.sqrt( (pr.coordinates[0]-event.pos[0])**2 + (pr.coordinates[1]-event.pos[1])**2 ) < 15:
+                                game_manager.add_move(Move(selected_unit, pr))
+                                pygame.draw.aaline(screen, COLORS["RED"], selected_unit.location.coordinates, pr.coordinates)
+                                pygame.draw.circle(screen, COLORS["RED"], selected_unit.location.coordinates, 15)
+                                selected_unit = None
 
 
     pygame.draw.rect(screen, COLORS["BG"], (screen.get_width()-55, 0, 55, 35))

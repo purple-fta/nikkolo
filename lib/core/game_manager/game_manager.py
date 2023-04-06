@@ -8,3 +8,9 @@ class GameManager:
 
     def add_move(self, move: Move):
         self.moves.add(move)
+
+    def make_movements(self):
+        for move in self.moves:
+            move.unit.location = move.target
+        
+        self.moves = set()
