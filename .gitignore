@@ -1,3 +1,6 @@
 # Virtual Envirements
 .venv
 __pycache__/
+
+# VS Code folders
+.vscode
