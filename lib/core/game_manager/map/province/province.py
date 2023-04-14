@@ -12,3 +12,6 @@ class Province:
         self.str = str
         self.province_type = province_type
         self.is_supply_center = is_supply_center
+        
+        # In the future, if the provinces have their own protection, it may be necessary. In the meantime...
+        #self.protection = 0 

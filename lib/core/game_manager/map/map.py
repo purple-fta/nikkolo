@@ -18,5 +18,18 @@ class Map:
     def add_connection(self, first_province: Province, second_province: Province):
         self.provinces_graph[first_province].add(second_province)
 
+<<<<<<< Updated upstream
     def add_unit(self, location: Province):
         self.units.add(Unit(location))
+=======
+    def add_unit(self, unit):
+        """Add a unit to the selected province
+
+        Args:
+            location (Province): The province in which there will be an amiya
+        """
+        self.units.add(unit)
+        
+        # In the future, if the provinces have their own protection, it may be necessary. In the meantime...
+        #unit.location.protection = unit.protection
+>>>>>>> Stashed changes
