@@ -1,26 +1,13 @@
 from .map import *
 import random
 
-<<<<<<< HEAD
-class GameManager(Map):
-class GameManager:
-=======
-<<<<<<< Updated upstream
 
-class GameManager:
-    def __init__(self, map):
-        self.map = map
-=======
 class GameManager(Map):
->>>>>>> add-support-move-and-hold
     """A set of commands for managing the game (adding moves, applying moves)"""
     
     def __init__(self):
         Map.__init__(self)
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
->>>>>>> add-support-move-and-hold
+
         self.moves = set()
 
     def add_move(self, new_move: Move):
@@ -40,21 +27,11 @@ class GameManager(Map):
         else:
             self.moves.add(new_move)
 
-<<<<<<< HEAD
-    def applying_moves(self):
-        """Applies all created moves (moves units)
-        """
-=======
-<<<<<<< Updated upstream
-    def make_movements(self):
-=======
     def applying_moves(self):
         """Applies all created moves (moves units)
         """
         target_provinces = dict()
 
->>>>>>> Stashed changes
->>>>>>> add-support-move-and-hold
         for move in self.moves:
             if move.target in target_provinces:
                 target_provinces[move.target].append(move)

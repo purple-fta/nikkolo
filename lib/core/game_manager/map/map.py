@@ -36,13 +36,6 @@ class Map:
         """
         self.provinces_graph[first_province].add(second_province)
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-    def add_unit(self, location: Province):
-        self.units.add(Unit(location))
-=======
->>>>>>> add-support-move-and-hold
     def add_unit(self, unit):
         """Add a unit to the selected province
 
@@ -52,9 +45,5 @@ class Map:
         self.units.add(unit)
         
         # In the future, if the provinces have their own protection, it may be necessary. In the meantime...
-<<<<<<< HEAD
         #unit.location.protection = unit.protection
-=======
-        #unit.location.protection = unit.protection
->>>>>>> Stashed changes
->>>>>>> add-support-move-and-hold
+
