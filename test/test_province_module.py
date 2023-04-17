@@ -15,5 +15,6 @@ def test_create_province():
         assert Province("123", 1, True)
         assert Province("123", "123", True)
         assert Province("123", [1], True)
+        assert Province("123", 10000, True)
         
         assert Province("123", ProvinceType.land.value, "123")
