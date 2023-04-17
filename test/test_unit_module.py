@@ -19,7 +19,7 @@ def test_create_move():
         assert Move(True, "3")
 
 def test_create_support_move():
-    assert SupportMove(Move(Unit(Province("", ProvinceType.land.value, True)), Province("", ProvinceType.land.value, True)), 
+    assert SupportMove(Unit(Province("", ProvinceType.land.value, True)), 
                        Province("", ProvinceType.land.value, True), 
                        Move(Unit(Province("", ProvinceType.land.value, True)), Province("", ProvinceType.land.value, True)))
 
