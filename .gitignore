@@ -4,3 +4,6 @@ __pycache__/
 
 # VS Code folders
 .vscode
+
+# Testing cache
+.pytest_cache
