@@ -72,20 +72,22 @@ def test_add_province_result():
                                         pr4: set([pr2, pr3, pr5]),
                                         pr5: set([pr4])}
 
-def test_add_province_with_type_error():
+@pytest.mark.parametrize(("new_province", "neighboring_provinces"), ( ["123", 123],
+                                                                      ["123", [1, 2, 3]],
+                                                                      ["123", [pr1, 2, pr2]] ))
+def test_add_province_with_type_error(new_province, neighboring_provinces):
     game_map.add_province(pr1, [pr2])
 
     with pytest.raises(TypeError):
-        game_map.add_province("123", 123)
-        game_map.add_province("123", [1, 2, 3])
-        game_map.add_province("123", [pr1, 2, pr2])
+        game_map.add_province(new_province, neighboring_provinces)
 
-def test_add_province_type_neighboring_with_value_error():
+@pytest.mark.parametrize(("new_province", "neighboring_provinces"), ( [pr5, [pr3]],
+                                                                      [pr3, [pr1]] ))
+def test_add_province_type_neighboring_with_value_error(new_province, neighboring_provinces):
     game_map.add_province(pr1, [pr2])
 
     with pytest.raises(ValueError):
-        game_map.add_province(pr5, [pr3])
-        game_map.add_province(pr3, [pr1])
+        game_map.add_province(new_province, neighboring_provinces)
 
 
 def test_add_transition_result():
@@ -119,40 +121,46 @@ def test_add_transition_result():
                                         pr4: set([pr2, pr3]),
                                         pr5: set()}
 
-def test_add_transition_type_neighboring_with_type_error():
+@pytest.mark.parametrize(("first_province", "second_province"), ( ["123", 123],
+                                                                  ["123", [1, 2, 3]],
+                                                                  ["123", [pr1, 2, pr2]]))
+def test_add_transition_type_neighboring_with_type_error(first_province, second_province):
     setup_provinces_in_mup()
 
     game_map.add_transition(pr1, pr2)
     
     with pytest.raises(TypeError):
-        game_map.add_transition("123", 123)
-        game_map.add_transition("123", [1, 2, 3])
-        game_map.add_transition("123", [pr1, 2, pr2])
+        game_map.add_transition(first_province, second_province)
 
-def test_add_transition_type_neighboring_with_value_error():
+@pytest.mark.parametrize(("first_province", "second_province"), ( [pr1, pr3],
+                                                                  [pr5, pr3] ))
+def test_add_transition_type_neighboring_with_value_error(first_province, second_province):
     setup_provinces_in_mup()
 
     game_map.add_transition(pr1, pr2)
     
     with pytest.raises(ValueError):
-        game_map.add_transition(pr1, pr3)
-        game_map.add_transition(pr5, pr3)
+        game_map.add_transition(first_province, second_province)
 
 
 def test_add_unit_result():
     game_map.add_unit(u1)
-    assert game_map.units() == set([u1])
+    assert game_map.units == set([u1])
 
     game_map.add_unit(u1)
-    assert game_map.units() == set([u1])
+    assert game_map.units == set([u1])
+
+    game_map.add_unit(Unit(pr1))
+    assert game_map.units == set([u1])
 
     game_map.add_unit(u2)
-    assert game_map.units() == set([u1, u2])
+    assert game_map.units == set([u1, u2])
 
-def test_add_unit_type_error():
+@pytest.mark.parametrize("unit", ( [ 123 ],
+                                   [[123]],
+                                   ["123"]))
+def test_add_unit_type_error(unit):
     game_map.add_unit(u1)
     
     with pytest.raises(TypeError):
-        game_map.add_unit(123)
-        game_map.add_unit("123")
-        game_map.add_unit([123])
+        game_map.add_unit(unit)
