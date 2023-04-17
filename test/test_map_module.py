@@ -47,28 +47,28 @@ def test_add_province_result():
     game_map.add_province(pr1, [])
     assert game_map.provinces_graph == {pr1: set()}
 
-    game_map.add_province(pr3, [p2])
+    game_map.add_province(pr3, [pr2])
     assert game_map.provinces_graph == {pr1: set(), 
                                         pr3: set([pr2]),
                                         pr2: set([pr3])}
 
-    game_map.add_province(pr2, [p1, pr4])
+    game_map.add_province(pr2, [pr1, pr4])
     assert game_map.provinces_graph == {pr1: set([pr2]), 
                                         pr3: set([pr2]),
-                                        pr2: set([p1,pr3, pr4]),
+                                        pr2: set([pr1,pr3, pr4]),
                                         pr4: set([pr2])}
     
-    game_map.add_province(pr4, [p2, pr3, pr5])
+    game_map.add_province(pr4, [pr2, pr3, pr5])
     assert game_map.provinces_graph == {pr1: set([pr2]), 
                                         pr3: set([pr2, pr4]),
-                                        pr2: set([p1,pr3, pr4]),
+                                        pr2: set([pr1,pr3, pr4]),
                                         pr4: set([pr2, pr3, pr5]),
                                         pr5: set([pr4])}
 
     game_map.add_province(pr5, [pr4])
     assert game_map.provinces_graph == {pr1: set([pr2]), 
                                         pr3: set([pr2, pr4]),
-                                        pr2: set([p1,pr3, pr4]),
+                                        pr2: set([pr1,pr3, pr4]),
                                         pr4: set([pr2, pr3, pr5]),
                                         pr5: set([pr4])}
 
