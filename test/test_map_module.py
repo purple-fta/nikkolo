@@ -84,8 +84,8 @@ def test_add_province_type_neighboring_with_value_error():
     game_map.add_province(pr1, [pr2])
 
     with pytest.raises(ValueError):
-    #    game_map.add_province(pr5, [pr3])
-    #    game_map.add_province(pr3, [pr1])
+        game_map.add_province(pr5, [pr3])
+        game_map.add_province(pr3, [pr1])
 
 
 def test_add_transition_result():
