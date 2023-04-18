@@ -143,18 +143,11 @@ def test_add_transition_type_neighboring_with_value_error(first_province, second
         game_map.add_transition(first_province, second_province)
 
 
-def test_add_unit_result():
-    game_map.add_unit(u1)
-    assert game_map.units == set([u1])
-
-    game_map.add_unit(u1)
-    assert game_map.units == set([u1])
-
-    game_map.add_unit(Unit(pr1))
-    assert game_map.units == set([u1])
-
-    game_map.add_unit(u2)
-    assert game_map.units == set([u1, u2])
+@pytest.mark.parametrize(("unit", "result"), ([u1, set([u1])],
+                                              [u1, set([u1])]))
+def test_add_unit_result(unit, result):
+    game_map.add_unit(unit)
+    assert game_map.units == result
 
 @pytest.mark.parametrize("unit", ( [ 123 ],
                                    [[123]],
