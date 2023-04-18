@@ -1,4 +1,4 @@
-from .province import Province
+from .province import Province, ProvinceType
 from .unit import Unit
 
 class Map:
@@ -15,17 +15,31 @@ class Map:
             new_province (Province): Province to be added
             neighboring_provinces (Province]): List of neighboring provinces. May be empty. If it includes provinces that have not yet been added, they will be automatically added
         """
+        
+        # Type checking
+        if not issubclass(type(new_province), Province):
+            raise TypeError("The first argument has the wrong type")
+        if type(neighboring_provinces) != list:
+            raise TypeError("The second argument has the wrong type")
+        
+        # Need to check the type in the list
+        else: 
+            for i in neighboring_provinces:
+                if not issubclass(type(i), Province):
+                    raise TypeError("The second argument has the wrong type")
+
+        # If a new province has already been added before, then we add neighbors to it
         if new_province not in self.provinces_graph:
             self.provinces_graph[new_province] = set(neighboring_provinces)
-        else:
-            for pr in neighboring_provinces:
-                self.provinces_graph[new_province].add(pr)
+        
+        # If the neighboring provinces have not yet been created, then you need to create
+        for pr in neighboring_provinces:
+            if pr not in self.provinces_graph:
+                self.provinces_graph[pr] = set()
 
+        # In neighboring provinces, you need to add a new province as a neighbor
         for province in neighboring_provinces:
-            if province in self.provinces_graph:
-                self.provinces_graph[province].add(new_province)
-            else:
-                self.provinces_graph[province] = set([new_province])
+            self.add_transition(new_province, province)
 
     def add_transition(self, first_province: Province, second_province: Province):
         """Adds a transition between two provinces.
@@ -34,16 +48,39 @@ class Map:
             first_province (Province): 
             second_province (Province): 
         """
-        self.provinces_graph[first_province].add(second_province)
+        
+        # Type checking
+        if not issubclass(type(first_province), Province):
+            raise TypeError("The first argument has the wrong type")
+        if not issubclass(type(second_province), Province):
+            raise TypeError("The second argument has the wrong type")
+        
+        # If incompatible types of provinces are adjacent
+        if first_province.province_type == ProvinceType.land.value: 
+            if second_province.province_type == ProvinceType.water.value:
+                raise ValueError("Inappropriate types for neighboring provinces")
+        if first_province.province_type == ProvinceType.water.value: 
+            if second_province.province_type == ProvinceType.land.value:
+                raise ValueError("Inappropriate types for neighboring provinces")
 
-    def add_unit(self, unit):
+        # Adding a transition for both provinces
+        self.provinces_graph[first_province].add(second_province)
+        self.provinces_graph[second_province].add(first_province)
+
+    def add_unit(self, new_unit: Unit):
         """Add a unit to the selected province
 
         Args:
             location (Province): The province in which there will be an amiya
         """
-        self.units.add(unit)
         
-        # In the future, if the provinces have their own protection, it may be necessary. In the meantime...
-        #unit.location.protection = unit.protection
+        # Type checking
+        if not issubclass(type(new_unit), Unit):
+            raise TypeError("The first argument has the wrong type")
 
+        # If the unit could already be created in that province
+        for unit in self.units:
+            if unit.location == new_unit.location:
+                return
+
+        self.units.add(new_unit)

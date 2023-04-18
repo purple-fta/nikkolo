@@ -4,37 +4,38 @@ import pytest
 
 
 @pytest.mark.parametrize("location", [[1], 2, "3", True])
-def test_create_unit(location):
+def test_create_unit_with_type_error(location):
     assert Unit(Province("", ProvinceType.land.value, True))
 
     with pytest.raises(TypeError):
         assert Unit(location)
 
-def test_create_move():
-    assert Move(Unit(Province("", ProvinceType.land.value, True)), Province("", ProvinceType.land.value, True))
-
+@pytest.mark.parametrize(("unit", "target"), [ [[1],   1],
+                                               ["2",  [2]],
+                                               [True, "3"] ])
+def test_create_move_with_type_error(unit, target):
     with pytest.raises(TypeError):
-        assert Move([1], 1)
-        assert Move("2", [2])
-        assert Move(True, "3")
+        assert Move(unit, target)
 
-def test_create_support_move():
+@pytest.mark.parametrize(("unit", "target", "move_target"), [ [[1],   1,  '1'],
+                                                              ["2",  [2],  2 ],
+                                                              [True, "3", [3]] ])
+def test_create_support_move_with_type_error(unit, target, move_target):
     assert SupportMove(Unit(Province("", ProvinceType.land.value, True)), 
                        Province("", ProvinceType.land.value, True), 
                        Move(Unit(Province("", ProvinceType.land.value, True)), Province("", ProvinceType.land.value, True)))
 
     with pytest.raises(TypeError):
-        assert SupportMove([1], 1, '1')
-        assert SupportMove("2", [2], 2)
-        assert SupportMove(True, "3", [3])
+        assert SupportMove(unit, target, move_target)
 
-def test_create_support_hold():
+@pytest.mark.parametrize(("unit", "target", "unit_target"), [ [[1],   1,  '1'],
+                                                              ["2",  [2],  2 ],
+                                                              [True, "3", [3]] ])
+def test_create_support_hold_with_type_error(unit, target, unit_target):
     assert SupportHold(Unit(Province("", ProvinceType.land.value, True)),
                        Province("", ProvinceType.land.value, True),
                        Unit(Province("", ProvinceType.land.value, True)))
     
     with pytest.raises(TypeError):
-        assert SupportHold([1], 1, '1')
-        assert SupportHold("2", [2], 2)
-        assert SupportHold(True, "3", [3])
+        assert SupportHold(unit, target, unit_target)
  

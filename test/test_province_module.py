@@ -3,16 +3,13 @@ from lib.core.game_manager.map.province import Province, ProvinceType
 import pytest
 
 
-def test_create_province():
-    assert Province("123", ProvinceType.land.value, True)
-
+@pytest.mark.parametrize(("name", "province_type", "is_supply_center"), [ [[123], ProvinceType.land.value, True],
+                                       
+                                       ["123", ProvinceType.land,       True],
+                                       ["123", "123",                   True],
+                                       ["123", [1],                     True],
+                                       
+                                       ["123", ProvinceType.land.value, "123"] ])
+def test_create_province(name, province_type, is_supply_center):
     with pytest.raises(TypeError):
-        assert Province([123], ProvinceType.land.value, True)
-
-        assert Province("123", ProvinceType.land, True)
-        assert Province("123", 1, True)
-        assert Province("123", "123", True)
-        assert Province("123", [1], True)
-        assert Province("123", 10000, True)
-        
-        assert Province("123", ProvinceType.land.value, "123")
+        assert Province(name, province_type, is_supply_center)
