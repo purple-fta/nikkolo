@@ -16,9 +16,16 @@ class GameManager(Map):
         Args:
             move (Move): Move class to add
         """
-        if new_move.target not in self.provinces_graph[new_move.unit.location]:
+
+        # Type checking
+        if not issubclass(type(new_move), Move):
+            raise TypeError("The first argument has the wrong type")
+
+        # If the target is out of reach
+        if new_move.province_target not in self.provinces_graph[new_move.unit.location]:
             return
 
+        # If there is already a move for this unit, then delete it
         for move in self.moves:
             if new_move.unit == move.unit:
                 self.moves.remove(move)
@@ -28,53 +35,47 @@ class GameManager(Map):
             self.moves.add(new_move)
 
     def applying_moves(self):
-        """Applies all created moves (moves units)
-        """
-        target_provinces = dict()
+        """Applies all created moves (moves units)"""
+        
+        self._apply_support_moves()
+        self._apply_support_holds()
 
+        target_province_with_moves = dict()
         for move in self.moves:
-            if move.target in target_provinces:
-                target_provinces[move.target].append(move)
-            else:
-                target_provinces[move.target] = [move]
+            if type(move) == Move:
+                if move.province_target in target_province_with_moves:
+                    target_province_with_moves[move.province_target].append(move)
+                else:
+                    target_province_with_moves[move.province_target] = [move]
 
-        for target_province in target_provinces:
-            self._apply_and_delate_support_moves(target_provinces[target_province])
-            self._apply_and_delate_support_holds(target_provinces[target_province])
-            
-            move = self._get_move_with_max_power(target_provinces[target_province])
+        for province in target_province_with_moves:
+            move = self._get_move_with_max_power(target_province_with_moves[province])
 
             if move:
-                unit_in_target = self._get_unit_in_province(move.target)
+                unit_in_target = self._get_unit_in_province(move.province_target)
+                protection = province.protection + (unit_in_target.protection if unit_in_target else 0)
 
-                if move.power > unit_in_target.protection:
-                    move.unit.location.protection -=  move.unit.protection
-
+                if move.power > protection:
                     if unit_in_target:
-                        unit_in_target.location = random.choice(self._get_free_neighboring_provinces(unit_in_target.location))
+                        if self._get_free_neighboring_provinces(unit_in_target.location):
+                            self._move_unit(unit_in_target, random.choice(self._get_free_neighboring_provinces(unit_in_target.location)))
+                        else:
+                            unit_in_target.location.protection -= unit_in_target.protection
+                            self.units.remove(unit_in_target)
 
-                    move.unit.location = move.target
+                    self._move_unit(move.unit, move.province_target)
 
         self.moves = set()
-    
-    def _apply_and_delate_support_moves(self, moves: [Move]):
-        i = 0
-        while i < len(moves):
-            if type(moves[i]) == SupportMove:
-                moves[i].move_target.power += moves[i].power
-                moves.remove(moves[i])
-            else:
-                i += 1
 
-    def _apply_and_delate_support_holds(self, moves: [Move]):
-        i = 0
-        while i < len(moves):
-            if type(moves[i]) == SupportHold:
-                moves[i].unit_target.protection += moves[i].unit.protection
-                moves.remove(moves[i])
-            else:
-                i += 1
+    def _apply_support_moves(self):
+        for move in self.moves:
+            if type(move) == SupportMove:
+                move.move_target.power += move.power
 
+    def _apply_support_holds(self):
+        for move in self.moves:
+            if type(move) == SupportHold:
+                move.unit_target.protection += move.unit.protection
 
     def _get_move_with_max_power(self, moves: [Move]): 
         max_power = max([move.power for move in moves])
@@ -97,3 +98,12 @@ class GameManager(Map):
                 result_provinces.append(pr)
 
         return result_provinces
+
+    def _move_unit(self, unit: Unit, target: Province):
+        # Type checking
+        if not issubclass(type(unit), Unit):
+            raise TypeError("The first argument has the wrong type")
+        if not issubclass(type(target), Province):
+            raise TypeError("The second argument has the wrong type")
+
+        unit.location = target

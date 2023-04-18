@@ -8,6 +8,7 @@ class Unit:
             location (Province): The province in which the unit is located
     """
     def __init__(self, location: Province):
+        # Type checking
         if not issubclass(type(location), Province):
             raise TypeError("The first argument has the wrong type")
         
@@ -17,15 +18,17 @@ class Unit:
 
 
 class Move:
-    def __init__(self, unit: Unit, target: Province):
+    def __init__(self, unit: Unit, province_target: Province):
+
+        # Type checking
         if not issubclass(type(unit), Unit):
             raise TypeError("The first argument has the wrong type")
-        if not issubclass(type(target), Province):
+        if not issubclass(type(province_target), Province):
             raise TypeError("The second argument has the wrong type")
 
         self.power = unit.power
         self.unit = unit
-        self.target = target
+        self.province_target = province_target
 
 
 class SupportMove(Move):
