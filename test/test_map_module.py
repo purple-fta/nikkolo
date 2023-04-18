@@ -157,3 +157,12 @@ def test_add_unit_type_error(unit):
     
     with pytest.raises(TypeError):
         game_map.add_unit(unit)
+
+def test_add_unit_protection():
+    setup_provinces_in_mup()
+    
+    #assert pr1.protection == 0
+
+    game_map.add_unit(u1)
+
+    #assert pr1.protection == u1.protection
