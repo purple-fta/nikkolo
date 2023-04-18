@@ -1,4 +1,11 @@
 from ..province import *
+from enum import Enum
+
+
+class UnitType(Enum):
+    overland = 1
+    nautical = 2
+
 
 
 class Unit:
@@ -7,7 +14,7 @@ class Unit:
         Args:
             location (Province): The province in which the unit is located
     """
-    def __init__(self, location: Province):
+    def __init__(self, location: Province, unit_type: UnitType = UnitType.overland.value):
         # Type checking
         if not issubclass(type(location), Province):
             raise TypeError("The first argument has the wrong type")
@@ -15,6 +22,8 @@ class Unit:
         self.location = location
         self.power = 1
         self.protection = 1
+
+        self.unit_type = unit_type
 
 
 class Move:
