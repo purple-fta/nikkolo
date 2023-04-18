@@ -93,28 +93,28 @@ def test_add_province_type_neighboring_with_value_error(new_province, neighborin
 def test_add_transition_result():
     setup_provinces_in_mup()
 
-    game_map.add_province(pr1, pr2)
+    game_map.add_transition(pr1, pr2)
     assert game_map.provinces_graph == {pr1: set([pr2]),
                                         pr2: set([pr1]),
                                         pr3: set(),
                                         pr4: set(),
                                         pr5: set()}
 
-    game_map.add_province(pr2, pr4)
+    game_map.add_transition(pr2, pr4)
     assert game_map.provinces_graph == {pr1: set([pr2]),
                                         pr2: set([pr1, pr4]),
                                         pr3: set(),
                                         pr4: set([pr2]),
                                         pr5: set()}
 
-    game_map.add_province(pr3, pr4)
+    game_map.add_transition(pr3, pr4)
     assert game_map.provinces_graph == {pr1: set([pr2]),
                                         pr2: set([pr1, pr4]),
                                         pr3: set([pr4]),
                                         pr4: set([pr2, pr3]),
                                         pr5: set()}
 
-    game_map.add_province(pr4, pr3)
+    game_map.add_transition(pr4, pr3)
     assert game_map.provinces_graph == {pr1: set([pr2]),
                                         pr2: set([pr1, pr4]),
                                         pr3: set([pr4]),
