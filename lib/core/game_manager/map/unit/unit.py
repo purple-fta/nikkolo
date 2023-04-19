@@ -25,6 +25,12 @@ class Unit:
 
         if not unit_type:
             unit_type = UnitType.nautical.value if location.province_type == ProvinceType.water.value else UnitType.overland.value
+        else:
+            if unit_type == UnitType.nautical.value and location.province_type == ProvinceType.land.value:
+                raise ValueError("Conflict between the type of unit and the type of province where it is located")
+            if unit_type == UnitType.overland.value and location.province_type == ProvinceType.water.value:
+                raise ValueError("Conflict between the type of unit and the type of province where it is located")
+
 
         self.unit_type = unit_type
 
