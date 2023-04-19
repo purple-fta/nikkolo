@@ -58,3 +58,9 @@ class SupportHold(Move):
             raise TypeError("The third argument has the wrong type")
         
         self.unit_target = unit_target
+
+
+class ConvoyMove(Move):
+    def __init__(self, unit: Unit, province_target: Province, ships: [Unit]):
+        Move.__init__(self, unit, province_target)
+        self.ships = ships
