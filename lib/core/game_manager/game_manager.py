@@ -123,6 +123,10 @@ class GameManager(Map):
                         if move2.unit.location == move.province_target:
                             if type(move2) == SupportHold or type(move2) == SupportMove:
                                 moves_for_remove.append(move2)
-        
+                        elif type(move2) == ConvoyMove:
+                            for ship in move2.ships:
+                                if ship.location == move.province_target:
+                                    moves_for_remove.append(move2)
+
         for i in moves_for_remove:
             self.moves.remove(i)
