@@ -1,4 +1,6 @@
-from lib.core.game_manager.map import Unit, Province, ProvinceType, Move, SupportHold, SupportMove
+from lib.core.game_manager.map import Unit, Province, ProvinceType, \
+                                      Move, SupportHold, SupportMove, \
+                                      ConvoyMove, UnitType
 
 import pytest
 
@@ -38,4 +40,45 @@ def test_create_support_hold_with_type_error(unit, target, unit_target):
     
     with pytest.raises(TypeError):
         assert SupportHold(unit, target, unit_target)
- 
+
+@pytest.mark.parametrize(("unit", "province_target", "ships"), [ [[1],   1,  '1'],
+                                                              ["2",  [2],  2 ],
+                                                              [True, "3", [3]] ])
+def test_create_convoy_with_type_error(unit, province_target, ships):
+    assert ConvoyMove(Unit(Province("", ProvinceType.coast.value, True)), 
+                      Province("", ProvinceType.coast.value, True),
+                      [Unit(Province("", ProvinceType.water.value, True), UnitType.nautical.value),
+                       Unit(Province("", ProvinceType.water.value, True), UnitType.nautical.value)])
+    
+    with pytest.raises(TypeError):
+        assert ConvoyMove(unit, province_target, ships)
+
+@pytest.mark.parametrize(("unit", "province_target", "ships"), [ 
+    [
+        Unit(Province("", ProvinceType.water.value, False)),
+        Province("", ProvinceType.coast.value, False),
+        [Unit(Province("", ProvinceType.water.value, False)),
+         Unit(Province("", ProvinceType.water.value, False))]
+    ],
+    
+    [
+        Unit(Province("", ProvinceType.coast.value, False)), 
+        Province("", ProvinceType.land.value, False), 
+        [Unit(Province("", ProvinceType.water.value, False)),
+         Unit(Province("", ProvinceType.water.value, False))]
+    ],
+    
+    [
+        Unit(Province("", ProvinceType.coast.value, False)), 
+        Province("", ProvinceType.coast.value, False), 
+        [Unit(Province("", ProvinceType.land.value, False)),
+         Unit(Province("", ProvinceType.land.value, False))]
+    ]])
+def test_create_convoy_with_value_error(unit, province_target, ships):
+    ConvoyMove(Unit(Province("", ProvinceType.coast.value, False)), 
+               Province("", ProvinceType.coast.value, False), 
+               [Unit(Province("", ProvinceType.water.value, False)),
+                Unit(Province("", ProvinceType.water.value, False))])
+    
+    with pytest.raises(ValueError):
+        ConvoyMove(unit, province_target, ships)
