@@ -1,5 +1,6 @@
 from lib.core.game_manager import GameManager, Move, SupportHold, SupportMove, \
-                                  Province, ProvinceType, Unit, ConvoyMove
+                                  Province, ProvinceType, Unit, ConvoyMove, \
+                                  UnitType
 
 import pytest
 
@@ -278,7 +279,7 @@ def test_interrupt_convoy_move():
     u3 = Unit(pr3)
     u4 = Unit(pr4)
     u5 = Unit(pr5)
-    u6 = Unit(pr6)
+    u6 = Unit(pr6, UnitType.nautical.value)
 
     game_manager.add_unit(u2)
     game_manager.add_unit(u3)
