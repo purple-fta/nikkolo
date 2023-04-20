@@ -39,6 +39,8 @@ class GameManager(Map):
     def applying_moves(self):
         """Applies all created moves (moves units)"""
         
+        self._apply_interrupt_moves()
+        
         self._apply_support_moves()
         self._apply_support_holds()
 
@@ -50,8 +52,6 @@ class GameManager(Map):
                     target_province_with_moves[move.province_target].append(move)
                 else:
                     target_province_with_moves[move.province_target] = [move]
-
-
 
         for province in target_province_with_moves:
             move = self._get_move_with_max_power(target_province_with_moves[province])
@@ -112,3 +112,17 @@ class GameManager(Map):
             raise TypeError("The second argument has the wrong type")
 
         unit.location = target
+
+    def _apply_interrupt_moves(self):
+        moves_for_remove = []
+
+        for move in self.moves:
+            if type(move) == Move:
+                if self._get_unit_in_province(move.province_target):
+                    for move2 in self.moves:
+                        if move2.unit.location == move.province_target:
+                            if type(move2) == SupportHold or type(move2) == SupportMove:
+                                moves_for_remove.append(move2)
+        
+        for i in moves_for_remove:
+            self.moves.remove(i)
