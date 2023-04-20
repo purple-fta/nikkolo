@@ -197,6 +197,14 @@ def test_applying_moves_fourth_example():
 
 
 def test_interrupt_support_move():
+    u5 = Unit(pr5)
+
+    game_manager.add_unit(u1)
+    game_manager.add_unit(u2)
+    game_manager.add_unit(u3)
+    game_manager.add_unit(u4)
+    game_manager.add_unit(u5)
+
     move = Move(u1, pr2)
     support_move = SupportMove(u3, pr2, move)
     move_for_interrupt = Move(u4, pr3)
@@ -213,6 +221,14 @@ def test_interrupt_support_move():
     assert u4.location == pr4
 
 def test_interrupt_support_hold():
+    u5 = Unit(pr5)
+    
+    game_manager.add_unit(u1)
+    game_manager.add_unit(u2)
+    game_manager.add_unit(u3)
+    game_manager.add_unit(u4)
+    game_manager.add_unit(u5)
+    
     move_for_interrupt = Move(u1, pr2)
     move = Move(u3, pr4)
     support_move = SupportMove(u5, pr4, move)
