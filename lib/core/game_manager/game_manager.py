@@ -22,7 +22,9 @@ class GameManager(Map):
             raise TypeError("The first argument has the wrong type")
 
         # If the target is out of reach
-        if new_move.province_target not in self.provinces_graph[new_move.unit.location]:
+        if type(new_move) == ConvoyMove:
+            pass
+        elif new_move.province_target not in self.provinces_graph[new_move.unit.location]:
             return
 
         # If there is already a move for this unit, then delete it
@@ -40,13 +42,16 @@ class GameManager(Map):
         self._apply_support_moves()
         self._apply_support_holds()
 
+        # Заполнение target_province_with_moves провинциями и ходами в которых они - цель
         target_province_with_moves = dict()
         for move in self.moves:
-            if type(move) == Move:
+            if type(move) == Move or type(move) == ConvoyMove:
                 if move.province_target in target_province_with_moves:
                     target_province_with_moves[move.province_target].append(move)
                 else:
                     target_province_with_moves[move.province_target] = [move]
+
+
 
         for province in target_province_with_moves:
             move = self._get_move_with_max_power(target_province_with_moves[province])
