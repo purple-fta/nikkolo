@@ -43,6 +43,7 @@ def teardown_function():
     global game_manager
     game_manager = GameManager()
 
+
 def test_add_move_result():
     move1 = Move(u1, pr2)
     game_manager.add_move(move1)
@@ -56,6 +57,7 @@ def test_add_move_result():
     game_manager.add_move(move3)
     assert game_manager.moves == set([move1, move2, move3])
 
+
 def test_add_move_with_type_error():
     move = Move(u1, pr2)
     game_manager.add_move(move)
@@ -66,6 +68,7 @@ def test_add_move_with_type_error():
         game_manager.add_move("!@#")
         game_manager.add_move([123, 123, 234])
 
+
 def test_applying_moves_first_example():
     move = Move(u1, pr2)
     
@@ -74,6 +77,7 @@ def test_applying_moves_first_example():
 
     assert game_manager.moves==set()
     assert move.unit.location == pr2
+
 
 def test_applying_moves_second_example_without_destroy_unit():
     game_manager.add_unit(u1)
@@ -130,6 +134,7 @@ def test_applying_moves_second_example_with_destroy_unit():
     #assert pr3.protection == u3.protection
     #assert pr4.protection == u4.protection
 
+
 def test_applying_moves_third_example():
     game_manager.add_unit(u1)
     game_manager.add_unit(u2)
@@ -161,6 +166,7 @@ def test_applying_moves_third_example():
     #assert pr3.protection == u3.protection
     #assert pr4.protection == u4.protection
 
+
 def test_applying_moves_fourth_example():
     game_manager = GameManager()
 
@@ -188,3 +194,102 @@ def test_applying_moves_fourth_example():
     assert u1.location == pr4
     assert u2.location == pr2
     assert u3.location == pr3
+
+
+def test_interrupt_support_move():
+    u5 = Unit(pr5)
+
+    game_manager.add_unit(u1)
+    game_manager.add_unit(u2)
+    game_manager.add_unit(u3)
+    game_manager.add_unit(u4)
+    game_manager.add_unit(u5)
+
+    move = Move(u1, pr2)
+    support_move = SupportMove(u3, pr2, move)
+    move_for_interrupt = Move(u4, pr3)
+
+    game_manager.add_move(move)
+    game_manager.add_move(support_move)
+    game_manager.add_move(move_for_interrupt)
+    
+    game_manager.applying_moves()
+
+    assert u1.location == pr1
+    assert u2.location == pr2
+    assert u3.location == pr3
+    assert u4.location == pr4
+
+def test_interrupt_support_hold():
+    u5 = Unit(pr5)
+    
+    game_manager.add_unit(u1)
+    game_manager.add_unit(u2)
+    game_manager.add_unit(u3)
+    game_manager.add_unit(u4)
+    game_manager.add_unit(u5)
+
+    move_for_interrupt = Move(u1, pr2)
+    move = Move(u3, pr4)
+    support_move = SupportMove(u5, pr4, move)
+    support_hold = SupportHold(u2, pr4, u4)
+
+    game_manager.add_move(move)
+    game_manager.add_move(support_hold)
+    game_manager.add_move(support_move)
+    game_manager.add_move(move_for_interrupt)
+    
+    game_manager.applying_moves()
+
+    assert u1.location == pr1
+    assert u2.location == pr2
+    assert u3.location == pr4
+    assert u4 not in game_manager.units
+    assert u5.location == pr5
+
+def test_interrupt_convoy_move():
+    #   
+    #                       water        coast
+    #   PR1 ---------------- PR2 -_------ PR6
+    #  coast                  |     -_    
+    #                         |        -_ 
+    #                         |           -_
+    #                        PR3 -------- PR4 ------- PR5
+    #                       water        water       coast
+    #
+
+    game_manager = GameManager()
+
+    pr1 = Province("PR1", ProvinceType.coast.value, False)
+    pr2 = Province("PR2", ProvinceType.water.value, False)
+    pr3 = Province("PR3", ProvinceType.water.value, False)
+    pr4 = Province("PR4", ProvinceType.water.value, False)
+    pr5 = Province("PR5", ProvinceType.coast.value, False)
+    pr6 = Province("PR5", ProvinceType.coast.value, False)
+
+    game_manager.add_province(pr1, [pr2])
+    game_manager.add_province(pr2, [pr1, pr3, pr4])
+    game_manager.add_province(pr3, [pr2, pr4])
+    game_manager.add_province(pr4, [pr3, pr2, pr5])
+    game_manager.add_province(pr5, [pr4])
+    game_manager.add_province(pr6, [pr2])
+
+    u2 = Unit(pr2)
+    u3 = Unit(pr3)
+    u4 = Unit(pr4)
+    u5 = Unit(pr5)
+    u6 = Unit(pr6)
+
+    game_manager.add_unit(u2)
+    game_manager.add_unit(u3)
+    game_manager.add_unit(u4)
+    game_manager.add_unit(u5)
+    game_manager.add_unit(u6)
+
+    convoy = ConvoyMove(u5, pr1, [u2, u3, u4])
+    move_for_interrupt = Move(u6, pr2)
+
+    game_manager.add_move(convoy)
+    game_manager.add_move(move_for_interrupt)
+
+    game_manager.applying_moves()
