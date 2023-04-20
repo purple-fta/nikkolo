@@ -293,3 +293,38 @@ def test_interrupt_convoy_move():
     game_manager.add_move(move_for_interrupt)
 
     game_manager.applying_moves()
+
+
+def test_ship_to_land():
+    teardown_function()
+
+    game_manager.add_province(pr1, [pr2])
+    game_manager.add_province(pr2, [pr3])
+
+    ship = Unit(pr1)
+
+    move = Move(ship, pr2)
+
+    game_manager.add_move(move)
+
+    game_manager.applying_moves()
+
+    with pytest.raises(ValueError):        
+        move = Move(ship, pr3)
+
+def test_overland_unit_to_water():
+    teardown_function()
+
+    game_manager.add_province(pr1, [pr2])
+    game_manager.add_province(pr2, [pr3])
+
+    unit = Unit(pr3)
+
+    move = Move(unit, pr2)
+
+    game_manager.add_move(move)
+
+    game_manager.applying_moves()
+
+    with pytest.raises(ValueError):        
+        move = Move(unit, pr1)
