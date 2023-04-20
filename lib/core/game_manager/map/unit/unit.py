@@ -44,6 +44,13 @@ class Move:
         if not issubclass(type(province_target), Province):
             raise TypeError("The second argument has the wrong type")
 
+
+        if unit.unit_type == UnitType.overland.value and province_target.province_type == ProvinceType.water.value:
+            raise ValueError("Overland unit cannot move to water")
+        if unit.unit_type == UnitType.nautical.value and province_target.province_type == ProvinceType.land.value:
+            raise ValueError("Overland unit cannot move to water")
+
+
         self.power = unit.power
         self.unit = unit
         self.province_target = province_target
