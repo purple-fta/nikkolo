@@ -1,5 +1,5 @@
 from lib.core.game_manager import GameManager, Move, SupportHold, SupportMove, \
-                                  Province, ProvinceType, Unit
+                                  Province, ProvinceType, Unit, ConvoyMove
 
 import pytest
 
@@ -160,3 +160,31 @@ def test_applying_moves_third_example():
     #assert pr2.protection == u2.protection
     #assert pr3.protection == u3.protection
     #assert pr4.protection == u4.protection
+
+def test_applying_moves_fourth_example():
+    game_manager = GameManager()
+
+    pr1 = Province("PR1", ProvinceType.coast.value, False)
+    pr2 = Province("PR2", ProvinceType.water.value, False)
+    pr3 = Province("PR3", ProvinceType.water.value, False)
+    pr4 = Province("PR4", ProvinceType.coast.value, False)
+
+    u1 = Unit(pr1)
+    u2 = Unit(pr2)
+    u3 = Unit(pr3)
+
+
+    convoy = ConvoyMove(u1, pr4, [u2, u3])
+    game_manager.add_move(convoy)
+
+    game_manager.add_province(pr1, [pr2])
+    game_manager.add_province(pr2, [pr3])
+    game_manager.add_province(pr3, [pr4])
+
+    game_manager.add_move(convoy)
+
+    game_manager.applying_moves()
+
+    assert u1.location == pr4
+    assert u2.location == pr2
+    assert u3.location == pr3
