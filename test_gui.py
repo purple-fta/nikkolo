@@ -144,7 +144,7 @@ def print_moves_on_map():
     }
 
     for move in game_manager.moves:
-        pygame.draw.aaline(screen, colors[type(move)], move.unit.location.coordinates, move.target.coordinates)
+        pygame.draw.aaline(screen, colors[type(move)], move.unit.location.coordinates, move.province_target.coordinates)
 
 def change_game_stage(new_game_stage):
     global game_stage
