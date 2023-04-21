@@ -117,7 +117,10 @@ def print_button_next():
 
 def print_provinces_on_map():
     for province in game_manager.provinces_graph:
-        pygame.draw.circle(screen, COLORS["COMM"], province.coordinates, 5)
+        if province.is_supply_center:
+            pygame.draw.circle(screen, COLORS["COMM"], province.coordinates, 5)
+        else:
+            pygame.draw.circle(screen, COLORS["BG"], province.coordinates, 5)
         province_type_string = ""
         if province.province_type == ProvinceType.land.value:
             province_type_string = ProvinceType.land.name
