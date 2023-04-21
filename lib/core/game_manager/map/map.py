@@ -78,6 +78,10 @@ class Map:
         if not issubclass(type(new_unit), Unit):
             raise TypeError("The first argument has the wrong type")
 
+        # Value checking
+        if not new_unit.location.is_supply_center:
+            raise TypeError("Unit spawning is allowed in the CA only")
+
         # If the unit could already be created in that province
         for unit in self.units:
             if unit.location == new_unit.location:
