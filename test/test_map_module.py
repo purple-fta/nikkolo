@@ -5,11 +5,11 @@ import pytest
 
 game_map = Map()
 
-pr1 = Province("PR1", ProvinceType.water.value, False)
-pr2 = Province("PR2", ProvinceType.coast.value, False)
-pr3 = Province("PR3", ProvinceType.land.value,  False)
-pr4 = Province("PR4", ProvinceType.coast.value, False)
-pr5 = Province("PR5", ProvinceType.water.value, False)
+pr1 = Province("PR1", ProvinceType.water.value, True)
+pr2 = Province("PR2", ProvinceType.coast.value, True)
+pr3 = Province("PR3", ProvinceType.land.value,  True)
+pr4 = Province("PR4", ProvinceType.coast.value, True)
+pr5 = Province("PR5", ProvinceType.water.value, True)
 
 u1 = Unit(pr1)
 u2 = Unit(pr2)
@@ -21,11 +21,11 @@ def setup_function():
     global game_map, pr1, pr2, pr3, pr4, pr5, u1, u2, u3, u4, u5
     game_map = Map()
 
-    pr1 = Province("PR1", ProvinceType.water.value, False)
-    pr2 = Province("PR2", ProvinceType.coast.value, False)
-    pr3 = Province("PR3", ProvinceType.land.value,  False)
-    pr4 = Province("PR4", ProvinceType.coast.value, False)
-    pr5 = Province("PR5", ProvinceType.water.value, False)
+    pr1 = Province("PR1", ProvinceType.water.value, True)
+    pr2 = Province("PR2", ProvinceType.coast.value, True)
+    pr3 = Province("PR3", ProvinceType.land.value,  True)
+    pr4 = Province("PR4", ProvinceType.coast.value, True)
+    pr5 = Province("PR5", ProvinceType.water.value, True)
     
     u1 = Unit(pr1)
     u2 = Unit(pr2)
