@@ -76,6 +76,8 @@ class GameManager(Map):
 
         self.moves = set()
 
+        self._delete_countries_without_province_with_initial_sc()    
+
     def paint_map(self):
         for country in self.countries:
             for unit in country.units:
@@ -147,3 +149,20 @@ class GameManager(Map):
 
         for i in moves_for_remove:
             self.moves.remove(i)
+
+    def _delete_countries_without_province_with_initial_sc(self):
+        country_to_remove = []
+        unit_to_remove = []
+        for country in self.countries:
+            for pr_with_sc in country.initial_provinces_with_sc:
+                if pr_with_sc in country.provinces:
+                    break
+            else:
+                self.country_to_remove.append(country)
+                for unit in country.units:
+                    self.unit_to_remove.append(unit)
+        
+        for country in country_to_remove:
+            self.countries.remove(country)
+        for unit in unit_to_remove:
+            self.units.remove(unit)
