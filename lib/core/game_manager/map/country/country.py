@@ -1,5 +1,6 @@
 from ..province import *
 
+
 class Country:
     def __init__(self, name: str, provinces: list):
         
@@ -18,5 +19,7 @@ class Country:
                 
 
         self.name = name
-        self.provinces = provinces
+        self.provinces = set(provinces)
         self.stability = 0
+
+        self.units = set()
