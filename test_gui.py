@@ -62,15 +62,15 @@ selected_province_for_create_move = None
 provinces = []
 
 def init_map():
-    provinces.append(GuiProvince("0", ProvinceType.land.value, (80, 100), False))
-    provinces.append(GuiProvince("1", ProvinceType.land.value, (330, 100), False))
-    provinces.append(GuiProvince("2", ProvinceType.land.value, (80, 250), False))
-    provinces.append(GuiProvince("3", ProvinceType.land.value, (330, 250), False))
-    provinces.append(GuiProvince("4", ProvinceType.land.value, (160, 350), False))
-    provinces.append(GuiProvince("5", ProvinceType.land.value, (70, 440), False))
-    provinces.append(GuiProvince("6", ProvinceType.land.value, (240, 410), False))
-    provinces.append(GuiProvince("7", ProvinceType.land.value, (520, 230), False))
-    provinces.append(GuiProvince("8", ProvinceType.land.value, (435, 385), False))
+    provinces.append(GuiProvince("0", ProvinceType.land.value, (80, 100), True))
+    provinces.append(GuiProvince("1", ProvinceType.land.value, (330, 100), True))
+    provinces.append(GuiProvince("2", ProvinceType.land.value, (80, 250), True))
+    provinces.append(GuiProvince("3", ProvinceType.land.value, (330, 250), True))
+    provinces.append(GuiProvince("4", ProvinceType.land.value, (160, 350), True))
+    provinces.append(GuiProvince("5", ProvinceType.land.value, (70, 440), True))
+    provinces.append(GuiProvince("6", ProvinceType.land.value, (240, 410), True))
+    provinces.append(GuiProvince("7", ProvinceType.land.value, (520, 230), True))
+    provinces.append(GuiProvince("8", ProvinceType.land.value, (435, 385), True))
 
     game_manager.add_province(provinces[0], [provinces[1], provinces[2]])
     game_manager.add_province(provinces[1], [provinces[2], provinces[3], provinces[7]])
