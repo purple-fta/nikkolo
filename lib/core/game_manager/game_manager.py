@@ -10,6 +10,7 @@ class GameManager(Map):
 
         self.moves = set()
 
+
     def add_move(self, new_move: Move):
         """Add new move
 
@@ -62,15 +63,30 @@ class GameManager(Map):
 
                 if move.power > protection:
                     if unit_in_target:
-                        if self._get_free_neighboring_provinces(unit_in_target.location):
-                            self._move_unit(unit_in_target, random.choice(self._get_free_neighboring_provinces(unit_in_target.location)))
+                        if self._get_free_neighboring_provinces(unit_in_target.location, target_province_with_moves):
+                            self._move_unit(unit_in_target, random.choice(self._get_free_neighboring_provinces(unit_in_target.location, target_province_with_moves)))
                         else:
                             unit_in_target.location.protection -= unit_in_target.protection
                             self.units.remove(unit_in_target)
+                            for country in self.countries:
+                                if unit_in_target in country.units:
+                                    country.units.remove(unit_in_target)
 
                     self._move_unit(move.unit, move.province_target)
 
         self.moves = set()
+
+    def paint_map(self):
+        for country in self.countries:
+            for unit in country.units:
+                if not unit.location.is_supply_center:
+                    country.provinces.add(unit.location)
+
+    def form(self):
+        for country in self.countries:
+            for unit in country.units:
+                country.provinces.add(unit.location)
+
 
     def _apply_support_moves(self):
         for move in self.moves:
@@ -95,12 +111,13 @@ class GameManager(Map):
             if unit.location == province:
                 return unit
 
-    def _get_free_neighboring_provinces(self, province):
+    def _get_free_neighboring_provinces(self, province, target_province_with_moves):
         result_provinces = []
         
         for pr in self.provinces_graph[province]:
             if pr not in [unit.location for unit in self.units]:
-                result_provinces.append(pr)
+                if pr not in target_province_with_moves:
+                    result_provinces.append(pr)
 
         return result_provinces
 
