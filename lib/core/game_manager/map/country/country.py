@@ -22,4 +22,6 @@ class Country:
         self.provinces = set(provinces)
         self.stability = 0
 
+        self.initial_provinces_with_sc = tuple(pr for pr in provinces if pr.is_supply_center)
+
         self.units = set()
