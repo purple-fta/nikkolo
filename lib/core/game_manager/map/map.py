@@ -1,4 +1,5 @@
 from .province import Province, ProvinceType
+from .country import Country
 from .unit import Unit
 
 class Map:
@@ -7,7 +8,9 @@ class Map:
     def __init__(self):
         self.provinces_graph = dict()
         self.units = set()
+        self.countries = set()
     
+
     def add_province(self, new_province: Province, neighboring_provinces: [Province]):
         """Add a new province to the map
 
@@ -67,7 +70,7 @@ class Map:
         self.provinces_graph[first_province].add(second_province)
         self.provinces_graph[second_province].add(first_province)
 
-    def add_unit(self, new_unit: Unit):
+    def add_unit(self, new_unit: Unit, country: Country = None):
         """Add a unit to the selected province
 
         Args:
@@ -87,4 +90,14 @@ class Map:
             if unit.location == new_unit.location:
                 return
 
+        if country:
+            country.units.add(new_unit)
+
         self.units.add(new_unit)
+
+    def add_country(self, country: Country):
+        # Type Checking
+        if not issubclass(type(country), Country):
+            raise TypeError("The first argument has the wrong type")
+
+        self.countries.add(country)
