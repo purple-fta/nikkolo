@@ -329,3 +329,9 @@ def test_overland_unit_to_water():
 
     with pytest.raises(ValueError):        
         move = Move(unit, pr1)
+
+
+@pytest.mark.parametrize(("country"), ( [1], ["123"], [[1, 2, 3]] ))
+def test_add_country_with_type_error(country):
+    with pytest.raises(TypeError):
+        game_manager.add_country(country)
