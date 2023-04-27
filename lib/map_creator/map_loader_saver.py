@@ -33,7 +33,6 @@ class Map_LS:
                     if int(p_n["province"].name) == nb:
                         p_n["neighboring"].add(p_n["province"])
 
-        print(provinces_neighboring)
 
         return provinces_neighboring                    
 
@@ -48,9 +47,9 @@ class Map_LS:
                     provinces_and_transitions_dict["provinces"][province_number]["tiles"].append((x, y))
                 else:
                     provinces_and_transitions_dict["provinces"][province_number] = {
-                        "tiles": [
+                        "tiles": {
                             (x, y)
-                        ],
+                        },
                         "is_supply_center": False, 
                         "province_type": None,
                         "neighboring": []
