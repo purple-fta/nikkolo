@@ -22,6 +22,7 @@ class Game(GameManager):
             self.add_province(pr["province"], list(pr["neighboring"]))
 
         self.hover_province = None
+        self.select_province = None
 
 
     def event_processing(self):
@@ -42,6 +43,11 @@ class Game(GameManager):
                     
                     if self.hover_province:
                         self.draw_province_border(self.hover_province)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 2:
+                    if self.hover_province:
+                        self.select_province = self.hover_province
 
     def draw_tiles(self):
         for province in self.provinces_graph:
