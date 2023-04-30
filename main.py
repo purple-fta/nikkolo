@@ -23,6 +23,7 @@ class Game(GameManager):
 
         self.hover_province = None
         self.select_province = None
+        self.font_small = pygame.font.SysFont("jetbrainsmononfm", 20)
 
 
     def event_processing(self):
@@ -49,6 +50,22 @@ class Game(GameManager):
                     if self.hover_province:
                         self.select_province = self.hover_province
 
+                        self.draw_side_bar()
+
+                        
+                self.draw_side_bar()
+
+    def draw_side_bar(self):
+        panel_x, panel_y = self.screen.get_width()-350, 0
+
+        pygame.draw.rect(self.screen, (68, 71, 90), (panel_x, panel_y, 350, self.screen.get_height()))
+
+        if self.select_province:
+            self.screen.blit(self.font_small.render(f"Province", True, (248, 248, 242)), (panel_x+125, panel_y+10))
+            self.screen.blit(self.font_small.render(f"Name: {self.select_province.name}", True, (248, 248, 242)), (panel_x+15, panel_y+35))
+            self.screen.blit(self.font_small.render(f"SC: {self.select_province.is_supply_center}", True, (248, 248, 242)), (panel_x+15, panel_y+60))
+            pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+100), (panel_x+350, panel_y+100))
+        
     def draw_tiles(self):
         for province in self.provinces_graph:
             color = self.get_color_province_type((98, 114, 164), (80, 250, 123), province)
@@ -108,6 +125,7 @@ class Game(GameManager):
     def run(self):
         self.draw_tiles()
         self.draw_provinces_border()
+        self.draw_side_bar()
         while True:
             self.event_processing()
 
