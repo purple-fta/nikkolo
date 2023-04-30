@@ -141,7 +141,7 @@ class Game(GameManager):
             self.event_processing()
 
             self.clock.tick(75)
-            print(f"{round(self.clock.get_fps())}")
+            #print(f"FPS: {round(self.clock.get_fps())}")
 
             pygame.display.update()
 
