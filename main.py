@@ -1,6 +1,7 @@
 from lib.map_creator.map_loader_saver import Map_LS
 from lib.core.game_manager import GameManager
 from lib.map_creator.gui_province import *
+from lib.map_creator.gui_country import *
 
 
 from random import choice
@@ -34,7 +35,26 @@ class Game(GameManager):
         self.STAGE_CREATE_COUNTRY = 1
         self.game_stage = self.STAGE_CREATE_COUNTRY
 
+        self.county_colors = (
+            (255, 85, 85),
+            (189, 147, 249),
+            (255, 121, 198),
+            (252, 193, 30),
+            (80, 250, 123)
+        )
+        self.county_colors_hover = (
+            (247, 126, 126),
+            (202, 171, 245),
+            (250, 147, 206),
+            (247, 210, 106),
+            (122, 255, 156)
+        )
+
         self.color_free_province = (250, 222, 145)
+
+        for i, color in enumerate(self.county_colors):
+            self.add_country(GuiCountry(str(i), [], color))
+
     def event_processing(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
