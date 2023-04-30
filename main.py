@@ -114,18 +114,19 @@ class Game(GameManager):
                 self.draw_tile(tile_x, tile_y, color)
 
     def draw_province_border(self, province):
+        color = (248, 248, 242) if province == self.select_province else (0, 0, 0)
         for tile_x, tile_y in province.tiles_coordinates:
             if [tile_x-1, tile_y] not in province.tiles_coordinates:
-                pygame.draw.line(self.screen, (0, 0, 0), (tile_x*16, tile_y*16), (tile_x*16, tile_y*16+16), 2)
+                pygame.draw.line(self.screen, color, (tile_x*16, tile_y*16), (tile_x*16, tile_y*16+16), 2)
 
             if [tile_x+1, tile_y] not in province.tiles_coordinates:
-                pygame.draw.line(self.screen, (0, 0, 0), (tile_x*16+16, tile_y*16), (tile_x*16+16, tile_y*16+16), 2)
+                pygame.draw.line(self.screen, color, (tile_x*16+16, tile_y*16), (tile_x*16+16, tile_y*16+16), 2)
 
             if [tile_x, tile_y-1] not in province.tiles_coordinates:
-                pygame.draw.line(self.screen, (0, 0, 0), (tile_x*16, tile_y*16), (tile_x*16+16, tile_y*16), 2)
+                pygame.draw.line(self.screen, color, (tile_x*16, tile_y*16), (tile_x*16+16, tile_y*16), 2)
                 
             if [tile_x, tile_y+1] not in province.tiles_coordinates:
-                pygame.draw.line(self.screen, (0, 0, 0), (tile_x*16, tile_y*16+16), (tile_x*16+16, tile_y*16+16), 2)
+                pygame.draw.line(self.screen, color, (tile_x*16, tile_y*16+16), (tile_x*16+16, tile_y*16+16), 2)
 
     def draw_provinces_border(self):
         for province in self.provinces_graph:
