@@ -22,7 +22,10 @@ class Game(GameManager):
             self.add_province(pr["province"], list(pr["neighboring"]))
 
         self.hover_province = None
-        self.select_province = None
+        for i in self.provinces_graph:
+            self.select_province = i
+            break
+
         self.font_small = pygame.font.SysFont("jetbrainsmononfm", 20)
 
 
