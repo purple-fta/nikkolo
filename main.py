@@ -51,10 +51,19 @@ class Game(GameManager):
                     if self.hover_province:
                         self.draw_province_border(self.hover_province)
 
+                    if self.select_province:
+                        self.draw_province_border(self.select_province)
+                    
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if self.hover_province:
                         self.select_province = self.hover_province
+
+                        
+                        if old_select_province:
+                            self.draw_province_border(old_select_province)
+                            
+                        self.draw_province_border(self.hover_province)
 
                         self.draw_side_bar()
 
