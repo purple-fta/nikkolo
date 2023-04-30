@@ -49,6 +49,7 @@ class Game(GameManager):
             (247, 210, 106),
             (122, 255, 156)
         )
+        self.selected_country_number = 0
 
         self.color_free_province = (250, 222, 145)
 
