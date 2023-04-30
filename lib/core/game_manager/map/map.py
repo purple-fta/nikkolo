@@ -101,3 +101,6 @@ class Map:
             raise TypeError("The first argument has the wrong type")
 
         self.countries.append(country)
+
+    def add_province_to_country(self, province, country):
+        country.provinces.add(province)
