@@ -97,9 +97,7 @@ class Game(GameManager):
                         self.draw_province_border(self.hover_province)
 
                         self.draw_side_bar()
-
-                        
-                
+         
                 if event.button == 3:
                     if self.hover_province:
                         if self.game_stage == self.STAGE_CREATE_COUNTRY:
@@ -107,6 +105,7 @@ class Game(GameManager):
                                 if self.hover_province in country.provinces:
                                     country.provinces.remove(self.hover_province)
                             self.draw_hover_province()
+                            self.draw_province_border(self.hover_province)
                             self.draw_sc_s()
 
             if event.type == pygame.KEYDOWN:
