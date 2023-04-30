@@ -31,6 +31,7 @@ class Game(GameManager):
         self.STAGE_CREATE_COUNTRY = 1
         self.game_stage = self.STAGE_CREATE_COUNTRY
 
+        self.color_free_province = (250, 222, 145)
     def event_processing(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -77,7 +78,7 @@ class Game(GameManager):
         
     def draw_tiles(self):
         for province in self.provinces_graph:
-            color = self.get_color_province_type((98, 114, 164), (80, 250, 123), province)
+            color = self.get_color_province_type((98, 114, 164), self.color_free_province, province)
             for tile_x, tile_y in province.tiles_coordinates:
                 self.draw_tile(tile_x, tile_y, color)
     
@@ -93,7 +94,7 @@ class Game(GameManager):
     def draw_tile(self, x, y, color=None):
         if not color:
             province = self.get_province_with_tile_coordinations(x, y)
-            color = self.get_color_province_type((98, 114, 164), (80, 250, 123), province)
+            color = self.get_color_province_type((98, 114, 164), self.color_free_province, province)
         
         pygame.draw.rect(self.screen, color, (16*x, 16*y, 16, 16))
 
