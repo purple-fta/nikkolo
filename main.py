@@ -28,6 +28,8 @@ class Game(GameManager):
 
         self.font_small = pygame.font.SysFont("jetbrainsmononfm", 20)
 
+        self.STAGE_CREATE_COUNTRY = 1
+        self.game_stage = self.STAGE_CREATE_COUNTRY
 
     def event_processing(self):
         for event in pygame.event.get():
@@ -56,6 +58,10 @@ class Game(GameManager):
                         self.draw_side_bar()
 
                         
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    self.game_stage = self.STAGE_CREATE_COUNTRY
+
                 self.draw_side_bar()
 
     def draw_side_bar(self):
