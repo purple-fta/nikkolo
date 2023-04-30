@@ -168,6 +168,10 @@ class Game(GameManager):
         if not color:
             province = self.get_province_with_tile_coordinations(x, y)
             color = self.get_color_province_type((98, 114, 164), self.color_free_province, province)
+            for county in self.countries:
+                for province in county.provinces:
+                    if [x, y] in province.tiles_coordinates:
+                        color = county.color
         
         pygame.draw.rect(self.screen, color, (16*x, 16*y, 16, 16))
 
@@ -183,6 +187,12 @@ class Game(GameManager):
         hover_province = self.get_province_with_tile_coordinations(mouse_tile_x, mouse_tile_y)
         if hover_province:
             color = self.get_color_province_type((139, 233, 253), (255, 184, 108), hover_province)
+            for county in self.countries:
+                for province in county.provinces:
+                    tile = hover_province.tiles_coordinates[0]
+                    if tile in province.tiles_coordinates:
+                        color = self.county_colors_hover[int(county.name)]
+
             for tile_x, tile_y in hover_province.tiles_coordinates:
                 self.draw_tile(tile_x, tile_y, color)
 
