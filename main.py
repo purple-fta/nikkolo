@@ -2,6 +2,9 @@ from lib.map_creator.map_loader_saver import Map_LS
 from lib.core.game_manager import GameManager
 from lib.map_creator.gui_province import *
 
+
+from random import choice
+import random
 import pygame
 import numpy
 
@@ -54,6 +57,8 @@ class Game(GameManager):
                     if self.select_province:
                         self.draw_province_border(self.select_province)
                     
+                    self.draw_sc_s()
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if self.hover_province:
@@ -91,6 +96,14 @@ class Game(GameManager):
             for tile_x, tile_y in province.tiles_coordinates:
                 self.draw_tile(tile_x, tile_y, color)
     
+    def draw_sc_s(self):
+        for province in self.provinces_graph:
+            if province.is_supply_center:
+                random.seed(province.name)
+                tile_x_for_sc, tile_y_for_sc = choice(province.tiles_coordinates)
+                pygame.draw.circle(self.screen, (0, 0, 0), (tile_x_for_sc*16+8, tile_y_for_sc*16+8), 9)
+                pygame.draw.circle(self.screen, (255, 255, 255), (tile_x_for_sc*16+8, tile_y_for_sc*16+8), 7)
+
     def draw_province_tiles(self, province):
         for tile_x, tile_y in province.tiles_coordinates:
             self.draw_tile(tile_x, tile_y)
@@ -145,6 +158,7 @@ class Game(GameManager):
     def run(self):
         self.draw_tiles()
         self.draw_provinces_border()
+        self.draw_sc_s()
         self.draw_side_bar()
         while True:
             self.event_processing()
