@@ -110,6 +110,21 @@ class Game(GameManager):
                             self.draw_sc_s()
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    self.selected_country_number = 0
+                if event.key == pygame.K_2:
+                    self.selected_country_number = 1
+                if event.key == pygame.K_3:
+                    self.selected_country_number = 2
+                if event.key == pygame.K_4:
+                    self.selected_country_number = 3
+                if event.key == pygame.K_5:
+                    self.selected_country_number = 4
+                if event.key == pygame.K_6:
+                    self.selected_country_number = 5
+                if event.key == pygame.K_7:
+                    self.selected_country_number = 6
+
                 if event.key == pygame.K_c:
                     self.game_stage = self.STAGE_CREATE_COUNTRY
 
