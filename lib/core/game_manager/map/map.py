@@ -103,4 +103,7 @@ class Map:
         self.countries.append(country)
 
     def add_province_to_country(self, province, country):
+        for c in self.countries:
+            if province in c.provinces:
+                c.provinces.remove(province)
         country.provinces.add(province)
