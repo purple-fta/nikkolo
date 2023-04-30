@@ -8,7 +8,7 @@ class Map:
     def __init__(self):
         self.provinces_graph = dict()
         self.units = set()
-        self.countries = set()
+        self.countries = []
     
 
     def add_province(self, new_province: Province, neighboring_provinces: [Province]):
@@ -100,4 +100,4 @@ class Map:
         if not issubclass(type(country), Country):
             raise TypeError("The first argument has the wrong type")
 
-        self.countries.add(country)
+        self.countries.append(country)
