@@ -82,8 +82,13 @@ class Game(GameManager):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if self.hover_province:
+                        old_select_province = self.select_province
                         self.select_province = self.hover_province
 
+                        if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                            self.add_province_to_country(self.select_province, self.countries[self.selected_country_number])
+                            self.draw_hover_province()
+                            self.draw_sc_s()
                         
                         if old_select_province:
                             self.draw_province_border(old_select_province)
