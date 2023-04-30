@@ -87,7 +87,7 @@ class GameManager(Map):
     def form(self):
         for country in self.countries:
             for unit in country.units:
-                country.provinces.add(unit.location)
+                self.add_province_to_country(unit.location, country)
 
 
     def _apply_support_moves(self):
