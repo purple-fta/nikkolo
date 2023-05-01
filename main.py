@@ -103,9 +103,9 @@ class Game(GameManager):
                 if event.button == 3:
                     if self.hover_province:
                         if self.game_stage == self.STAGE_CREATE_COUNTRY:
-                            for country in self.countries:
-                                if self.hover_province in country.provinces:
-                                    country.provinces.remove(self.hover_province)
+                            country = self.get_county_with_province(self.hover_province)
+                            country.provinces.remove(self.hover_province)
+
                             self.draw_hover_province()
                             self.draw_province_border(self.hover_province)
                             self.draw_sc_s()
@@ -132,6 +132,11 @@ class Game(GameManager):
                     self.game_stage = self.STAGE_CREATE_UNIT
 
                 self.draw_side_bar()
+
+    def get_county_with_province(self, province):
+        for country in self.countries:
+            if province in country.provinces:
+                return country
 
     def draw_side_bar(self):
         panel_x, panel_y = self.screen.get_width()-350, 0
