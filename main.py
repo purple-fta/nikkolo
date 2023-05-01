@@ -34,6 +34,7 @@ class Game(GameManager):
         self.font_small = pygame.font.SysFont("jetbrainsmononfm", 14)
 
         self.STAGE_CREATE_COUNTRY = 1
+        self.STAGE_CREATE_UNIT = 2
         self.game_stage = self.STAGE_CREATE_COUNTRY
 
         self.county_colors = (
@@ -127,6 +128,8 @@ class Game(GameManager):
 
                 if event.key == pygame.K_c:
                     self.game_stage = self.STAGE_CREATE_COUNTRY
+                if event.key == pygame.K_u:
+                    self.game_stage = self.STAGE_CREATE_UNIT
 
                 self.draw_side_bar()
 
@@ -151,6 +154,7 @@ class Game(GameManager):
         pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+190), (panel_x+350, panel_y+190))
         self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 195))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+"(C)reate country", True, (255, 255, 255)), (panel_x+15, 220))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+"Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
 
     def draw_tiles(self):
         for province in self.provinces_graph:
