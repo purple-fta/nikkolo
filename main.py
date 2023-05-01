@@ -2,6 +2,7 @@ from lib.map_creator.map_loader_saver import Map_LS
 from lib.core.game_manager import GameManager
 from lib.map_creator.gui_province import *
 from lib.map_creator.gui_country import *
+from lib.map_creator.gui_unit import *
 
 
 from random import choice
@@ -34,6 +35,7 @@ class Game(GameManager):
         self.font_small = pygame.font.SysFont("jetbrainsmononfm", 14)
 
         self.STAGE_CREATE_COUNTRY = 1
+        self.STAGE_CREATE_UNIT = 2
         self.game_stage = self.STAGE_CREATE_COUNTRY
 
         self.county_colors = (
@@ -80,6 +82,7 @@ class Game(GameManager):
                         self.draw_province_border(self.select_province)
                     
                     self.draw_sc_s()
+                    self.draw_units()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -91,7 +94,9 @@ class Game(GameManager):
                             self.add_province_to_country(self.select_province, self.countries[self.selected_country_number])
                             self.draw_hover_province()
                             self.draw_sc_s()
-                        
+                        if self.game_stage == self.STAGE_CREATE_UNIT:
+                            self.create_unit_in_province(pygame.mouse.get_pos(),self.hover_province)
+
                         if old_select_province:
                             self.draw_province_border(old_select_province)
                             
@@ -102,9 +107,9 @@ class Game(GameManager):
                 if event.button == 3:
                     if self.hover_province:
                         if self.game_stage == self.STAGE_CREATE_COUNTRY:
-                            for country in self.countries:
-                                if self.hover_province in country.provinces:
-                                    country.provinces.remove(self.hover_province)
+                            country = self.get_county_with_province(self.hover_province)
+                            country.provinces.remove(self.hover_province)
+
                             self.draw_hover_province()
                             self.draw_province_border(self.hover_province)
                             self.draw_sc_s()
@@ -127,8 +132,36 @@ class Game(GameManager):
 
                 if event.key == pygame.K_c:
                     self.game_stage = self.STAGE_CREATE_COUNTRY
+                if event.key == pygame.K_u:
+                    self.game_stage = self.STAGE_CREATE_UNIT
 
                 self.draw_side_bar()
+
+    def create_unit_in_province(self, mouse_pos, province):
+        unit = GuiUnit(list(mouse_pos), province)
+        country = self.get_county_with_province(province)
+
+        if not country:
+            return
+
+        try:
+            self.add_unit(unit, country)
+        except:
+            pass
+
+        self.draw_units()
+
+    def draw_units(self):
+        for country in self.countries:
+            for unit in country.units:
+                pygame.draw.circle(self.screen, (0, 0, 0), unit.coordinates, 12)
+                pygame.draw.circle(self.screen, country.color, unit.coordinates, 10)
+                self.screen.blit(self.font.render("U", True, (0, 0, 0)), (unit.coordinates[0]-6, unit.coordinates[1]-13))
+
+    def get_county_with_province(self, province):
+        for country in self.countries:
+            if province in country.provinces:
+                return country
 
     def draw_side_bar(self):
         panel_x, panel_y = self.screen.get_width()-350, 0
@@ -141,16 +174,16 @@ class Game(GameManager):
             self.screen.blit(self.font.render(f"SC: {self.select_province.is_supply_center}", True, (248, 248, 242)), (panel_x+15, panel_y+60))
             pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+100), (panel_x+350, panel_y+100))
         
-        if self.game_stage == self.STAGE_CREATE_COUNTRY:
-            self.screen.blit(self.font.render(f"New Country", True, (248, 248, 242)), (panel_x+110, panel_y+110))
-            for i, color in enumerate(self.county_colors):
-                if color == self.county_colors[self.selected_country_number]:
-                    pygame.draw.rect(self.screen, (255, 255, 255), (panel_x+15+i*40, panel_y+145, 30, 30))
-                pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
+        self.screen.blit(self.font.render(f"New Country", True, (248, 248, 242)), (panel_x+110, panel_y+110))
+        for i, color in enumerate(self.county_colors):
+            if color == self.county_colors[self.selected_country_number]:
+                pygame.draw.rect(self.screen, (255, 255, 255), (panel_x+15+i*40, panel_y+145, 30, 30))
+            pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
 
         pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+190), (panel_x+350, panel_y+190))
         self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 195))
-        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+"(C)reate country", True, (255, 255, 255)), (panel_x+15, 220))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+"Create (c)ountry", True, (255, 255, 255)), (panel_x+15, 220))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+"Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
 
     def draw_tiles(self):
         for province in self.provinces_graph:
