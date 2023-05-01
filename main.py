@@ -140,6 +140,9 @@ class Game(GameManager):
         unit = GuiUnit(list(mouse_pos), province)
         country = self.get_county_with_province(province)
 
+        if not country:
+            return
+
         try:
             self.add_unit(unit, country)
         except:
