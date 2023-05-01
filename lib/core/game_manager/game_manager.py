@@ -25,8 +25,8 @@ class GameManager(Map):
         # If the target is out of reach
         if type(new_move) == ConvoyMove:
             pass
-        elif new_move.province_target not in self.provinces_graph[new_move.unit.location]:
-            return
+        #elif new_move.province_target not in self.provinces_graph[new_move.unit.location]:
+        #    return
 
         # If there is already a move for this unit, then delete it
         for move in self.moves:

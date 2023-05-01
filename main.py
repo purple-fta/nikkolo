@@ -1,5 +1,6 @@
 from lib.map_creator.map_loader_saver import Map_LS
 from lib.core.game_manager import GameManager
+from lib.core.game_manager.map.unit import *
 from lib.map_creator.gui_province import *
 from lib.map_creator.gui_country import *
 from lib.map_creator.gui_unit import *
@@ -36,7 +37,14 @@ class Game(GameManager):
 
         self.STAGE_CREATE_COUNTRY = 1
         self.STAGE_CREATE_UNIT = 2
+        self.STAGE_CREATE_MOVE = 3
         self.game_stage = self.STAGE_CREATE_COUNTRY
+
+        self.MOVE_TYPE = 1
+        self.SUPPORT_MOVE_TYPE = 2
+        self.SUPPORT_HOLD_TYPE = 3
+        self.CONVOY_TYPE = 4
+        self.created_type_move = self.MOVE_TYPE
 
         self.county_colors = (
             (255, 85, 85),
@@ -58,6 +66,9 @@ class Game(GameManager):
 
         for i, color in enumerate(self.county_colors):
             self.add_country(GuiCountry(str(i), [], color))
+
+        self.unit_for_create_move = None
+        self.province_for_create_move = None
 
     def event_processing(self):
         for event in pygame.event.get():
@@ -82,6 +93,7 @@ class Game(GameManager):
                         self.draw_province_border(self.select_province)
                     
                     self.draw_sc_s()
+                    self.draw_moves()
                     self.draw_units()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -96,12 +108,20 @@ class Game(GameManager):
                             self.draw_sc_s()
                         if self.game_stage == self.STAGE_CREATE_UNIT:
                             self.create_unit_in_province(pygame.mouse.get_pos(),self.hover_province)
+                        if self.game_stage == self.STAGE_CREATE_MOVE:
+                            if not self.unit_for_create_move:
+                                self.unit_for_create_move = self.get_unit_in_province(self.select_province)
+                                self.draw_units()
+                            elif not self.province_for_create_move:
+                                self.province_for_create_move = self.select_province
+
+                                self.create_move(self.unit_for_create_move, self.province_for_create_move)
 
                         if old_select_province:
                             self.draw_province_border(old_select_province)
                             
                         self.draw_province_border(self.hover_province)
-
+                        self.draw_moves()
                         self.draw_side_bar()
          
                 if event.button == 3:
@@ -116,24 +136,43 @@ class Game(GameManager):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
-                    self.selected_country_number = 0
-                if event.key == pygame.K_2:
-                    self.selected_country_number = 1
-                if event.key == pygame.K_3:
-                    self.selected_country_number = 2
-                if event.key == pygame.K_4:
-                    self.selected_country_number = 3
-                if event.key == pygame.K_5:
-                    self.selected_country_number = 4
-                if event.key == pygame.K_6:
-                    self.selected_country_number = 5
-                if event.key == pygame.K_7:
-                    self.selected_country_number = 6
+                    if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                        self.selected_country_number = 0
+                    if self.game_stage == self.STAGE_CREATE_MOVE:
+                        self.created_type_move = self.MOVE_TYPE
 
+                if event.key == pygame.K_2:
+                    if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                        self.selected_country_number = 1
+                    if self.game_stage == self.STAGE_CREATE_MOVE:
+                        self.created_type_move = self.SUPPORT_MOVE_TYPE
+
+                if event.key == pygame.K_3:
+                    if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                        self.selected_country_number = 2
+                    if self.game_stage == self.STAGE_CREATE_MOVE:
+                        self.created_type_move = self.SUPPORT_HOLD_TYPE
+
+                if event.key == pygame.K_4:
+                    if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                        self.selected_country_number = 3
+                    if self.game_stage == self.STAGE_CREATE_MOVE:
+                        self.created_type_move = self.CONVOY_TYPE
+
+                if event.key == pygame.K_5:
+                    if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                        self.selected_country_number = 4
+
+                if event.key == pygame.K_6:
+                    if self.game_stage == self.STAGE_CREATE_COUNTRY:
+                        self.selected_country_number = 5
+                
                 if event.key == pygame.K_c:
                     self.game_stage = self.STAGE_CREATE_COUNTRY
                 if event.key == pygame.K_u:
                     self.game_stage = self.STAGE_CREATE_UNIT
+                if event.key == pygame.K_m:
+                    self.game_stage = self.STAGE_CREATE_MOVE
 
                 self.draw_side_bar()
 
@@ -151,10 +190,26 @@ class Game(GameManager):
 
         self.draw_units()
 
+    def get_unit_in_province(self, province):
+        for unit in self.units:
+            if unit.location == province:
+                return unit
+
+    def create_move(self, unit, province):
+        if self.created_type_move == self.MOVE_TYPE:
+            self.add_move(GuiMove(unit, province, pygame.mouse.get_pos()))
+        self.unit_for_create_move = None
+        self.province_for_create_move = None
+
+    def draw_moves(self):
+        for move in self.moves:
+            if type(move) == GuiMove:
+                pygame.draw.line(self.screen, (255, 0, 0), move.unit.coordinates, move.target_coordinates, 5)
+
     def draw_units(self):
         for country in self.countries:
             for unit in country.units:
-                pygame.draw.circle(self.screen, (0, 0, 0), unit.coordinates, 12)
+                pygame.draw.circle(self.screen, (255, 255, 255) if unit == self.unit_for_create_move else (0, 0, 0), unit.coordinates, 12)
                 pygame.draw.circle(self.screen, country.color, unit.coordinates, 10)
                 self.screen.blit(self.font.render("U", True, (0, 0, 0)), (unit.coordinates[0]-6, unit.coordinates[1]-13))
 
@@ -184,6 +239,14 @@ class Game(GameManager):
         self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 192))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+" Create (c)ountry", True, (255, 255, 255)), (panel_x+15, 220))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+" Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_MOVE else "[ ]")+" Create (m)ove", True, (255, 255, 255)), (panel_x+15, 260))
+
+        pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+290), (panel_x+350, panel_y+290))
+        self.screen.blit(self.font.render("Create Move", True, (255, 255, 255)), (panel_x+110, 292))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.MOVE_TYPE else "[ ]")+" Move (1)", True, (255, 255, 255)), (panel_x+15, 320))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.SUPPORT_MOVE_TYPE else "[ ]")+" Support Move (2)", True, (255, 255, 255)), (panel_x+15, 340))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.SUPPORT_HOLD_TYPE else "[ ]")+" Support Hold (3)", True, (255, 255, 255)), (panel_x+15, 360))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.CONVOY_TYPE else "[ ]")+" Convoy (4)", True, (255, 255, 255)), (panel_x+15, 380))
 
     def draw_tiles(self):
         for province in self.provinces_graph:
@@ -270,6 +333,7 @@ class Game(GameManager):
 
             self.clock.tick(75)
             #print(f"FPS: {round(self.clock.get_fps())}")
+            #print(self.moves)
 
             pygame.display.update()
 

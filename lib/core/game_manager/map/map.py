@@ -59,12 +59,12 @@ class Map:
             raise TypeError("The second argument has the wrong type")
         
         # If incompatible types of provinces are adjacent
-        if first_province.province_type == ProvinceType.land.value: 
-            if second_province.province_type == ProvinceType.water.value:
-                raise ValueError("Inappropriate types for neighboring provinces")
-        if first_province.province_type == ProvinceType.water.value: 
-            if second_province.province_type == ProvinceType.land.value:
-                raise ValueError("Inappropriate types for neighboring provinces")
+        #if first_province.province_type == ProvinceType.land.value: 
+        #    if second_province.province_type == ProvinceType.water.value:
+        #        raise ValueError("Inappropriate types for neighboring provinces")
+        #if first_province.province_type == ProvinceType.water.value: 
+        #    if second_province.province_type == ProvinceType.land.value:
+        #        raise ValueError("Inappropriate types for neighboring provinces")
 
         # Adding a transition for both provinces
         self.provinces_graph[first_province].add(second_province)
