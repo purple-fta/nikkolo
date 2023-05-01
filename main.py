@@ -156,6 +156,7 @@ class Game(GameManager):
             for unit in country.units:
                 pygame.draw.circle(self.screen, (0, 0, 0), unit.coordinates, 12)
                 pygame.draw.circle(self.screen, country.color, unit.coordinates, 10)
+                self.screen.blit(self.font.render("U", True, (0, 0, 0)), (unit.coordinates[0]-6, unit.coordinates[1]-13))
 
     def get_county_with_province(self, province):
         for country in self.countries:
