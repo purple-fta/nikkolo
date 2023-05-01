@@ -82,6 +82,7 @@ class Game(GameManager):
                         self.draw_province_border(self.select_province)
                     
                     self.draw_sc_s()
+                    self.draw_units()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -147,6 +148,14 @@ class Game(GameManager):
             self.add_unit(unit, country)
         except:
             pass
+
+        self.draw_units()
+
+    def draw_units(self):
+        for country in self.countries:
+            for unit in country.units:
+                pygame.draw.circle(self.screen, (0, 0, 0), unit.coordinates, 12)
+                pygame.draw.circle(self.screen, country.color, unit.coordinates, 10)
 
     def get_county_with_province(self, province):
         for country in self.countries:
