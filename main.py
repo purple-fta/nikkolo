@@ -39,6 +39,12 @@ class Game(GameManager):
         self.STAGE_CREATE_MOVE = 3
         self.game_stage = self.STAGE_CREATE_COUNTRY
 
+        self.MOVE_TYPE = 1
+        self.SUPPORT_MOVE_TYPE = 2
+        self.SUPPORT_HOLD_TYPE = 3
+        self.CONVOY_TYPE = 4
+        self.created_type_move = self.MOVE_TYPE
+
         self.county_colors = (
             (255, 85, 85),
             (189, 147, 249),
@@ -188,6 +194,15 @@ class Game(GameManager):
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+" Create (c)ountry", True, (255, 255, 255)), (panel_x+15, 220))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+" Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_MOVE else "[ ]")+" Create (m)ove", True, (255, 255, 255)), (panel_x+15, 260))
+
+        pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+290), (panel_x+350, panel_y+290))
+        self.screen.blit(self.font.render("Create Move", True, (255, 255, 255)), (panel_x+110, 292))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.MOVE_TYPE else "[ ]")+" Move (1)", True, (255, 255, 255)), (panel_x+15, 320))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.SUPPORT_MOVE_TYPE else "[ ]")+" Support Move (2)", True, (255, 255, 255)), (panel_x+15, 340))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.SUPPORT_HOLD_TYPE else "[ ]")+" Support Hold (3)", True, (255, 255, 255)), (panel_x+15, 360))
+        self.screen.blit(self.font_small.render(("[x]" if self.created_type_move == self.CONVOY_TYPE else "[ ]")+" Convoy (4)", True, (255, 255, 255)), (panel_x+15, 380))
+
+
 
     def draw_tiles(self):
         for province in self.provinces_graph:
