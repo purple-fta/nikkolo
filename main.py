@@ -2,6 +2,7 @@ from lib.map_creator.map_loader_saver import Map_LS
 from lib.core.game_manager import GameManager
 from lib.map_creator.gui_province import *
 from lib.map_creator.gui_country import *
+from lib.map_creator.gui_unit import *
 
 
 from random import choice
@@ -92,7 +93,9 @@ class Game(GameManager):
                             self.add_province_to_country(self.select_province, self.countries[self.selected_country_number])
                             self.draw_hover_province()
                             self.draw_sc_s()
-                        
+                        if self.game_stage == self.STAGE_CREATE_UNIT:
+                            self.create_unit_in_province(pygame.mouse.get_pos(),self.hover_province)
+
                         if old_select_province:
                             self.draw_province_border(old_select_province)
                             
@@ -132,6 +135,15 @@ class Game(GameManager):
                     self.game_stage = self.STAGE_CREATE_UNIT
 
                 self.draw_side_bar()
+
+    def create_unit_in_province(self, mouse_pos, province):
+        unit = GuiUnit(list(mouse_pos), province)
+        country = self.get_county_with_province(province)
+
+        try:
+            self.add_unit(unit, country)
+        except:
+            pass
 
     def get_county_with_province(self, province):
         for country in self.countries:
