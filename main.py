@@ -181,9 +181,9 @@ class Game(GameManager):
             pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
 
         pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+190), (panel_x+350, panel_y+190))
-        self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 195))
-        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+"Create (c)ountry", True, (255, 255, 255)), (panel_x+15, 220))
-        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+"Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
+        self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 192))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+" Create (c)ountry", True, (255, 255, 255)), (panel_x+15, 220))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+" Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
 
     def draw_tiles(self):
         for province in self.provinces_graph:
