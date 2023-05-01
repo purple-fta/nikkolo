@@ -144,12 +144,11 @@ class Game(GameManager):
             self.screen.blit(self.font.render(f"SC: {self.select_province.is_supply_center}", True, (248, 248, 242)), (panel_x+15, panel_y+60))
             pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+100), (panel_x+350, panel_y+100))
         
-        if self.game_stage == self.STAGE_CREATE_COUNTRY:
-            self.screen.blit(self.font.render(f"New Country", True, (248, 248, 242)), (panel_x+110, panel_y+110))
-            for i, color in enumerate(self.county_colors):
-                if color == self.county_colors[self.selected_country_number]:
-                    pygame.draw.rect(self.screen, (255, 255, 255), (panel_x+15+i*40, panel_y+145, 30, 30))
-                pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
+        self.screen.blit(self.font.render(f"New Country", True, (248, 248, 242)), (panel_x+110, panel_y+110))
+        for i, color in enumerate(self.county_colors):
+            if color == self.county_colors[self.selected_country_number]:
+                pygame.draw.rect(self.screen, (255, 255, 255), (panel_x+15+i*40, panel_y+145, 30, 30))
+            pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
 
         pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+190), (panel_x+350, panel_y+190))
         self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 195))
