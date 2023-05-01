@@ -31,7 +31,7 @@ class Map_LS:
             for nb in provinces_json["provinces"][name]["neighboring"]:
                 for p_n in provinces_neighboring:
                     if int(p_n["province"].name) == nb:
-                        p_n["neighboring"].add(p_n["province"])
+                        provinces_neighboring[int(name)]["neighboring"].add(provinces_neighboring[nb]["province"])
 
 
         return provinces_neighboring                    
@@ -47,13 +47,21 @@ class Map_LS:
                     provinces_and_transitions_dict["provinces"][province_number]["tiles"].append((x, y))
                 else:
                     provinces_and_transitions_dict["provinces"][province_number] = {
-                        "tiles": {
+                        "tiles": [
                             (x, y)
-                        },
+                        ],
                         "is_supply_center": False, 
                         "province_type": None,
                         "neighboring": []
                     }
+
+        for name in provinces_and_transitions_dict["provinces"]:
+            x, y = provinces_and_transitions_dict["provinces"][name]["tiles"][0]
+            if self.tile_number_array[x, y] == 0:
+                provinces_and_transitions_dict["provinces"][name]["province_type"] = ProvinceType.land.value
+            else:
+                provinces_and_transitions_dict["provinces"][name]["province_type"] = ProvinceType.water.value
+        
 
         for name in provinces_and_transitions_dict["provinces"]:
             for tile_coordinations in provinces_and_transitions_dict["provinces"][name]["tiles"]:
@@ -64,20 +72,20 @@ class Map_LS:
                 
                 for x_n in range(x-1, x+1):
                     if self.provinces_number_array[x_n, y] != self.provinces_number_array[x, y]:
+                        if self.tile_number_array[x_n, y] == 2:
+                            if self.tile_number_array[x, y] == 0:
+                                if provinces_and_transitions_dict["provinces"][name]["province_type"] != ProvinceType.coast.value:
+                                    provinces_and_transitions_dict["provinces"][name]["province_type"] = ProvinceType.coast.value
                         provinces_and_transitions_dict["provinces"][name]["neighboring"].append(int(self.provinces_number_array[x_n, y]))
 
                 for y_n in range(y-1, y+1):
                     if self.provinces_number_array[x, y_n] != self.provinces_number_array[x, y]:
+                        if self.tile_number_array[y, y_n] == 2:
+                            if self.tile_number_array[x, y] == 0:
+                                if provinces_and_transitions_dict["provinces"][name]["province_type"] != ProvinceType.coast.value:
+                                    provinces_and_transitions_dict["provinces"][name]["province_type"] = ProvinceType.coast.value
                         provinces_and_transitions_dict["provinces"][name]["neighboring"].append(int(self.provinces_number_array[x, y_n]))
-        
 
-
-        for name in provinces_and_transitions_dict["provinces"]:
-            x, y = provinces_and_transitions_dict["provinces"][name]["tiles"][0]
-            if self.tile_number_array[x, y] == 0:
-                provinces_and_transitions_dict["provinces"][name]["province_type"] = ProvinceType.land.value
-            else:
-                provinces_and_transitions_dict["provinces"][name]["province_type"] = ProvinceType.water.value
 
 
         with open("saved_maps/map1.json", "w") as json_file:
