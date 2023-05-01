@@ -148,6 +148,10 @@ class Game(GameManager):
                     pygame.draw.rect(self.screen, (255, 255, 255), (panel_x+15+i*40, panel_y+145, 30, 30))
                 pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
 
+        pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+190), (panel_x+350, panel_y+190))
+        self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 195))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+"(C)reate country", True, (255, 255, 255)), (panel_x+15, 220))
+
     def draw_tiles(self):
         for province in self.provinces_graph:
             color = self.get_color_province_type((98, 114, 164), self.color_free_province, province)
