@@ -30,7 +30,8 @@ class Game(GameManager):
             self.select_province = i
             break
 
-        self.font_small = pygame.font.SysFont("jetbrainsmononfm", 20)
+        self.font = pygame.font.SysFont("jetbrainsmononfm", 20)
+        self.font_small = pygame.font.SysFont("jetbrainsmononfm", 14)
 
         self.STAGE_CREATE_COUNTRY = 1
         self.game_stage = self.STAGE_CREATE_COUNTRY
@@ -135,17 +136,21 @@ class Game(GameManager):
         pygame.draw.rect(self.screen, (68, 71, 90), (panel_x, panel_y, 350, self.screen.get_height()))
 
         if self.select_province:
-            self.screen.blit(self.font_small.render(f"Province", True, (248, 248, 242)), (panel_x+125, panel_y+10))
-            self.screen.blit(self.font_small.render(f"Name: {self.select_province.name}", True, (248, 248, 242)), (panel_x+15, panel_y+35))
-            self.screen.blit(self.font_small.render(f"SC: {self.select_province.is_supply_center}", True, (248, 248, 242)), (panel_x+15, panel_y+60))
+            self.screen.blit(self.font.render(f"Province", True, (248, 248, 242)), (panel_x+125, panel_y+10))
+            self.screen.blit(self.font.render(f"Name: {self.select_province.name}", True, (248, 248, 242)), (panel_x+15, panel_y+35))
+            self.screen.blit(self.font.render(f"SC: {self.select_province.is_supply_center}", True, (248, 248, 242)), (panel_x+15, panel_y+60))
             pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+100), (panel_x+350, panel_y+100))
         
         if self.game_stage == self.STAGE_CREATE_COUNTRY:
-            self.screen.blit(self.font_small.render(f"New Country", True, (248, 248, 242)), (panel_x+110, panel_y+110))
+            self.screen.blit(self.font.render(f"New Country", True, (248, 248, 242)), (panel_x+110, panel_y+110))
             for i, color in enumerate(self.county_colors):
                 if color == self.county_colors[self.selected_country_number]:
                     pygame.draw.rect(self.screen, (255, 255, 255), (panel_x+15+i*40, panel_y+145, 30, 30))
                 pygame.draw.rect(self.screen, color, (panel_x+17+i*40, panel_y+147, 26, 26))
+
+        pygame.draw.line(self.screen, (248, 248, 242), (panel_x, panel_y+190), (panel_x+350, panel_y+190))
+        self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 195))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+"(C)reate country", True, (255, 255, 255)), (panel_x+15, 220))
 
     def draw_tiles(self):
         for province in self.provinces_graph:
