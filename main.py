@@ -177,6 +177,11 @@ class Game(GameManager):
 
         self.draw_units()
 
+    def get_unit_in_province(self, province):
+        for unit in self.units:
+            if unit.location == province:
+                return unit
+
     def draw_units(self):
         for country in self.countries:
             for unit in country.units:
