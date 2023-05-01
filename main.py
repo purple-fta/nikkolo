@@ -36,6 +36,7 @@ class Game(GameManager):
 
         self.STAGE_CREATE_COUNTRY = 1
         self.STAGE_CREATE_UNIT = 2
+        self.STAGE_CREATE_MOVE = 3
         self.game_stage = self.STAGE_CREATE_COUNTRY
 
         self.county_colors = (
@@ -134,6 +135,8 @@ class Game(GameManager):
                     self.game_stage = self.STAGE_CREATE_COUNTRY
                 if event.key == pygame.K_u:
                     self.game_stage = self.STAGE_CREATE_UNIT
+                if event.key == pygame.K_m:
+                    self.game_stage = self.STAGE_CREATE_MOVE
 
                 self.draw_side_bar()
 
@@ -184,6 +187,7 @@ class Game(GameManager):
         self.screen.blit(self.font.render("Game Stage", True, (255, 255, 255)), (panel_x+115, 192))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_COUNTRY else "[ ]")+" Create (c)ountry", True, (255, 255, 255)), (panel_x+15, 220))
         self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_UNIT else "[ ]")+" Create (u)nit", True, (255, 255, 255)), (panel_x+15, 240))
+        self.screen.blit(self.font_small.render(("[x]" if self.game_stage == self.STAGE_CREATE_MOVE else "[ ]")+" Create (m)ove", True, (255, 255, 255)), (panel_x+15, 260))
 
     def draw_tiles(self):
         for province in self.provinces_graph:
