@@ -64,8 +64,26 @@ class Game(GameManager):
 
         self.color_free_province = (250, 222, 145)
 
-        for i, color in enumerate(self.county_colors):
-            self.add_country(GuiCountry(str(i), [], color))
+        # for i, color in enumerate(self.county_colors):
+        prs1_n = [0, 9, 24, 11, 1, 10, 64, 2, 66]
+        prs1 = []
+        for pr in self.provinces_graph:
+            if int(pr.name) in prs1_n:
+                prs1.append(pr)
+        self.add_country(GuiCountry(str(0), prs1, self.county_colors[0]))
+        prs_n = [5, 4, 7, 67]
+        prs = []
+        for pr in self.provinces_graph:
+            if int(pr.name) in prs_n:
+                prs.append(pr)
+        self.add_country(GuiCountry(str(1), prs, self.county_colors[1]))
+        prs_n = [68, 33, 65, 32, 70, 34, 69]
+        prs = []
+        for pr in self.provinces_graph:
+            if int(pr.name) in prs_n:
+                prs.append(pr)
+        self.add_country(GuiCountry(str(2), prs, self.county_colors[2]))
+
 
         self.unit_for_create_move = None
         self.province_for_create_move = None
@@ -173,6 +191,16 @@ class Game(GameManager):
                     self.game_stage = self.STAGE_CREATE_UNIT
                 if event.key == pygame.K_m:
                     self.game_stage = self.STAGE_CREATE_MOVE
+                
+                if event.key == pygame.K_n:
+                    self.applying_moves()
+                    self.draw_tiles()
+                    self.draw_provinces_border()
+                    self.draw_sc_s()
+                    self.draw_moves()
+                    self.draw_units()
+                if event.key == pygame.K_f:
+                    self.form()
 
                 self.draw_side_bar()
 
@@ -195,9 +223,19 @@ class Game(GameManager):
             if unit.location == province:
                 return unit
 
+    def get_move_in_unit(self, unit):
+        for move in self.moves:
+            if move.unit == unit:
+                return move
+
     def create_move(self, unit, province):
         if self.created_type_move == self.MOVE_TYPE:
             self.add_move(GuiMove(unit, province, pygame.mouse.get_pos()))
+        if self.created_type_move == self.SUPPORT_MOVE_TYPE:
+            move = self.get_move_in_unit(self.get_unit_in_province(province))
+            if move:
+                self.add_move(GuiSupportMove(unit, move.province_target, move, pygame.mouse.get_pos()))
+
         self.unit_for_create_move = None
         self.province_for_create_move = None
 
@@ -205,6 +243,9 @@ class Game(GameManager):
         for move in self.moves:
             if type(move) == GuiMove:
                 pygame.draw.line(self.screen, (255, 0, 0), move.unit.coordinates, move.target_coordinates, 5)
+            if type(move) == GuiSupportMove:
+                pygame.draw.line(self.screen, (255, 255, 0), move.unit.coordinates, move.target_coordinates, 5)
+
 
     def draw_units(self):
         for country in self.countries:
@@ -251,6 +292,9 @@ class Game(GameManager):
     def draw_tiles(self):
         for province in self.provinces_graph:
             color = self.get_color_province_type((98, 114, 164), self.color_free_province, province)
+            country = self.get_county_with_province(province)
+            if country:
+                color = country.color
             for tile_x, tile_y in province.tiles_coordinates:
                 self.draw_tile(tile_x, tile_y, color)
     
@@ -321,7 +365,6 @@ class Game(GameManager):
     def draw_provinces_border(self):
         for province in self.provinces_graph:
             self.draw_province_border(province)
-
 
     def run(self):
         self.draw_tiles()

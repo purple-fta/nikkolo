@@ -1,4 +1,4 @@
-from lib.core.game_manager.map.unit import Unit, Move
+from lib.core.game_manager.map.unit import *
 
 
 class GuiUnit(Unit):
@@ -12,3 +12,10 @@ class GuiMove(Move):
         Move.__init__(self, unit, province_target)
 
         self.target_coordinates = target_coordinates
+
+class GuiSupportMove(SupportMove):
+    def __init__(self, unit, province_target, move_target, target_coordinates):
+        SupportMove.__init__(self, unit, province_target, move_target)
+
+        self.target_coordinates = target_coordinates
+
