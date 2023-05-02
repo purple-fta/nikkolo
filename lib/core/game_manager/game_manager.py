@@ -1,6 +1,8 @@
 from .map import *
 import random
 
+from lib.map_creator.gui_unit import *
+
 
 class GameManager(Map):
     """A set of commands for managing the game (adding moves, applying moves)"""
@@ -48,7 +50,7 @@ class GameManager(Map):
         # Заполнение target_province_with_moves провинциями и ходами в которых они - цель
         target_province_with_moves = dict()
         for move in self.moves:
-            if type(move) == Move or type(move) == ConvoyMove:
+            if (type(move) == Move or type(move) == ConvoyMove) or (type(move) == GuiMove or type(move) == ConvoyMove):
                 if move.province_target in target_province_with_moves:
                     target_province_with_moves[move.province_target].append(move)
                 else:
@@ -92,7 +94,7 @@ class GameManager(Map):
 
     def _apply_support_moves(self):
         for move in self.moves:
-            if type(move) == SupportMove:
+            if type(move) == SupportMove or type(move) == GuiSupportMove:
                 move.move_target.power += move.power
 
     def _apply_support_holds(self):
@@ -130,6 +132,10 @@ class GameManager(Map):
         if not issubclass(type(target), Province):
             raise TypeError("The second argument has the wrong type")
 
+        if type(unit) == GuiUnit:
+            x, y = random.choice(target.tiles_coordinates)
+            unit.coordinates = [x*16, y*16]
+
         unit.location = target
 
     def _apply_interrupt_moves(self):
@@ -140,7 +146,7 @@ class GameManager(Map):
                 if self._get_unit_in_province(move.province_target):
                     for move2 in self.moves:
                         if move2.unit.location == move.province_target:
-                            if type(move2) == SupportHold or type(move2) == SupportMove:
+                            if type(move2) == SupportHold or type(move2) == SupportMove or type(move2) == GuiSupportMove:
                                 moves_for_remove.append(move2)
                         elif type(move2) == ConvoyMove:
                             for ship in move2.ships:
@@ -158,9 +164,9 @@ class GameManager(Map):
                 if pr_with_sc in country.provinces:
                     break
             else:
-                self.country_to_remove.append(country)
+                country_to_remove.append(country)
                 for unit in country.units:
-                    self.unit_to_remove.append(unit)
+                    unit_to_remove.append(unit)
         
         for country in country_to_remove:
             self.countries.remove(country)
